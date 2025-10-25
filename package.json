@@ -4,13 +4,15 @@
   "main": "index.js",
   "scripts": {
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:run": "cypress run",
+    "docs": "node scripts/generate-docs.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "cypress": "^15.5.0"
+    "cypress": "^15.5.0",
+    "cypress-real-events": "^1.15.0"
   },
   "description": ""
 }
