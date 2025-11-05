@@ -23,7 +23,7 @@ describe("Teste HGTX Codex - Geração de Áudio", () => {
     cy.wait("@getApps").its("response.statusCode").should("eq", 200);
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.url().should("include", "codex");
@@ -58,7 +58,7 @@ describe("Teste HGTX Codex - Geração de Áudio", () => {
     );
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.url().should("include", "codex");
@@ -108,7 +108,7 @@ describe("Teste HGTX Codex - Geração de Áudio", () => {
     }).as("getTranscribeAudio");
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.url().should("include", "codex");
@@ -153,7 +153,7 @@ describe("Teste HGTX Codex - Geração de Áudio", () => {
     );
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.url().should("include", "codex");
@@ -199,7 +199,7 @@ describe("Teste HGTX Codex - Geração de Áudio", () => {
     );
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.url().should("include", "codex");
@@ -243,7 +243,7 @@ describe("Teste HGTX Codex - Geração de Áudio", () => {
     cy.wait("@getApps").its("response.statusCode").should("eq", 200);
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.url().should("include", "codex");

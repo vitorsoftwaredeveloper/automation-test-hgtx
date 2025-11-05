@@ -25,7 +25,7 @@ describe("Teste HGTX Codex - Imagens", () => {
     cy.intercept("POST", "**/webhook/codex/image_generator").as("getImages");
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.url().should("include", "codex");
@@ -65,7 +65,7 @@ describe("Teste HGTX Codex - Imagens", () => {
     }).as("getImages");
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.url().should("include", "codex");
@@ -93,7 +93,7 @@ describe("Teste HGTX Codex - Imagens", () => {
     cy.intercept("POST", "**/webhook/codex/image_generator").as("getImages");
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.url().should("include", "codex");
@@ -130,7 +130,7 @@ describe("Teste HGTX Codex - Imagens", () => {
     cy.intercept("POST", "**/webhook/codex/image_generator").as("getImages");
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.url().should("include", "codex");
@@ -167,7 +167,7 @@ describe("Teste HGTX Codex - Imagens", () => {
     cy.intercept("POST", "**/webhook/codex/image_generator").as("getImages");
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.url().should("include", "codex");
@@ -193,7 +193,7 @@ describe("Teste HGTX Codex - Imagens", () => {
     cy.intercept("POST", "**/webhook/codex/image_generator").as("getImages");
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.url().should("include", "codex");

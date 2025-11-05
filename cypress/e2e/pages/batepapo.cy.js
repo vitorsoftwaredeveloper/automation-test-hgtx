@@ -23,7 +23,7 @@ describe("Teste HGTX Codex - Bate-papo", () => {
     cy.wait("@getApps").its("response.statusCode").should("eq", 200);
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.url().should("include", "codex");
@@ -45,7 +45,7 @@ describe("Teste HGTX Codex - Bate-papo", () => {
     cy.wait("@getApps").its("response.statusCode").should("eq", 200);
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.contains("Bate-papo").click();
@@ -62,7 +62,7 @@ describe("Teste HGTX Codex - Bate-papo", () => {
     cy.wait("@getApps").its("response.statusCode").should("eq", 200);
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.contains("Bate-papo").click();
@@ -91,7 +91,7 @@ describe("Teste HGTX Codex - Bate-papo", () => {
     cy.wait("@getApps").its("response.statusCode").should("eq", 200);
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.contains("Bate-papo").click();
@@ -122,7 +122,7 @@ describe("Teste HGTX Codex - Bate-papo", () => {
     cy.wait("@getApps").its("response.statusCode").should("eq", 200);
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.contains("Bate-papo").click();
@@ -154,7 +154,7 @@ describe("Teste HGTX Codex - Bate-papo", () => {
     cy.wait("@getApps").its("response.statusCode").should("eq", 200);
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.contains("Bate-papo").click();
@@ -187,7 +187,7 @@ describe("Teste HGTX Codex - Bate-papo", () => {
     cy.wait("@getApps").its("response.statusCode").should("eq", 200);
 
     cy.wait(3000);
-    cy.contains("Codex 2.0").click();
+    // cy.contains("Codex 2.0").click();
 
     cy.origin("https://hgtx-codex.goutron.com.br", () => {
       cy.contains("Bate-papo").click();

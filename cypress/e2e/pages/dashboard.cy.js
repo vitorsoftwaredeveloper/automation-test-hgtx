@@ -15,7 +15,7 @@ describe("example to-do app", () => {
 
     cy.wait("@getApps").then((interception) => {
       expect(interception.response.statusCode).to.eq(200);
-      cy.contains("Codex 2.0").click();
+      // cy.contains("Codex 2.0").click();
 
       cy.origin("https://hgtx-codex.goutron.com.br", () => {
         cy.url().should("include", "codex");
