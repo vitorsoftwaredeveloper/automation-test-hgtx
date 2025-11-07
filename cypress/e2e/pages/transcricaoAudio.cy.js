@@ -2,18 +2,7 @@
 
 describe("Teste HGTX Codex - Geração de Áudio", () => {
   beforeEach(() => {
-    cy.visit("https://core.hgtx.com.br/aplicativos/apps");
-
-    cy.get("#loginInputEmail")
-      .should("be.visible")
-      .type("qatestercodex@hgtx.com.br");
-    cy.get("#mat-input-1")
-      .should("be.visible")
-      .should("not.be.disabled")
-      .type("tester123");
-    cy.get('button[type="submit"]').should("be.enabled").click();
-
-    cy.url({ timeout: 15000 }).should("include", "/aplicativos/apps");
+    cy.login()
   });
 
   it("deve visualizar a página de transcrição de áudio com opções de transcrição e histórico.", () => {

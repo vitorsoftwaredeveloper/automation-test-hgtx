@@ -23,3 +23,18 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add("login", () => {
+  cy.visit("/aplicativos/apps");
+
+  cy.get("#loginInputEmail")
+    .should("be.visible")
+    .type("qatestercodex@hgtx.com.br");
+
+  cy.get("#mat-input-1")
+    .should("be.visible")
+    .should("not.be.disabled")
+    .type("tester123");
+
+  cy.get('button[type="submit"]').should("be.enabled").click();
+});

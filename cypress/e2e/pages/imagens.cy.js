@@ -2,18 +2,7 @@
 
 describe("Teste HGTX Codex - Imagens", () => {
   beforeEach(() => {
-    cy.visit("https://core.hgtx.com.br/aplicativos/apps");
-
-    cy.get("#loginInputEmail")
-      .should("be.visible")
-      .type("qatestercodex@hgtx.com.br");
-    cy.get("#mat-input-1")
-      .should("be.visible")
-      .should("not.be.disabled")
-      .type("tester123");
-    cy.get('button[type="submit"]').should("be.enabled").click();
-
-    cy.url({ timeout: 15000 }).should("include", "/aplicativos/apps");
+    cy.login()
   });
 
   it("deve ser capaz de gerar uma imagem.", () => {
@@ -158,7 +147,7 @@ describe("Teste HGTX Codex - Imagens", () => {
     });
   });
 
-  it("deve ser capaz inserir busca e não visualizar imagem gerada.", () => {
+  it("ddeve ser capaz inserir busca na aba histórico e não visualizar imagem gerada.", () => {
     cy.contains("Codex 2.0").click();
 
     cy.intercept("POST", "**/aplicativos/gerar_aretrs").as("getApps");

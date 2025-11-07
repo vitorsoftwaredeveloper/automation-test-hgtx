@@ -2,10 +2,10 @@
 
 describe("Teste HGTX Codex - Login", () => {
   beforeEach(() => {
-    cy.visit("https://core.hgtx.com.br/aplicativos/apps");
+    cy.visit("/aplicativos/apps");
   });
 
-  it("deve ser capaz de realizar o login", () => {
+  it("O sistema deve permitir fazer o login", () => {
     cy.get("#loginInputEmail").type("qatestercodex@hgtx.com.br");
     cy.get("#mat-input-1").type("tester123");
     cy.get('button[type="submit"]').click();
@@ -14,7 +14,7 @@ describe("Teste HGTX Codex - Login", () => {
     cy.contains("Codex 2.0").should("be.visible");
   });
 
-  it("deve ser capaz de visualizar um erro de login", () => {
+  it("O sistema deve mostrar mensagem quando uma tentativa de login não tem sucesso devido as credenciais estarem incorretas.", () => {
     cy.get("#loginInputEmail").type("qatestercodex@hgtx.com.br");
     cy.get("#mat-input-1").type("tester");
     cy.get('button[type="submit"]').click();

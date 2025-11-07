@@ -2,18 +2,7 @@
 
 describe("Teste HGTX Codex - Bate-papo", () => {
   beforeEach(() => {
-    cy.visit("https://core.hgtx.com.br/aplicativos/apps");
-
-    cy.get("#loginInputEmail")
-      .should("be.visible")
-      .type("qatestercodex@hgtx.com.br");
-    cy.get("#mat-input-1")
-      .should("be.visible")
-      .should("not.be.disabled")
-      .type("tester123");
-    cy.get('button[type="submit"]').should("be.enabled").click();
-
-    cy.url({ timeout: 15000 }).should("include", "/aplicativos/apps");
+    cy.login()
   });
 
   it("deve visualizar a página de bate-papo com opções de novo chat e nova pasta", () => {
@@ -34,7 +23,7 @@ describe("Teste HGTX Codex - Bate-papo", () => {
     });
   });
 
-  it("deve visualizar mensagem de erro ao tentar criar um novo chat quando a API falha", () => {
+  it("deve visualizar mensagem de erro ao tentar criar um novo chat quando a tentativa de criação de novo chat falha.", () => {
     cy.contains("Codex 2.0").click();
     cy.intercept("POST", "**/aplicativos/gerar_aretrs").as("getApps");
     cy.intercept("GET", "**/get_chat_folders/qatestercodex@hgtx.com.br", {
@@ -56,7 +45,7 @@ describe("Teste HGTX Codex - Bate-papo", () => {
     });
   });
 
-  it("deve criar uma nova pasta de chat e validar que apareceu na tela", () => {
+  it("deve criar uma nova pasta de chat e validar que está visível na tela", () => {
     cy.contains("Codex 2.0").click();
     cy.intercept("POST", "**/aplicativos/gerar_aretrs").as("getApps");
     cy.wait("@getApps").its("response.statusCode").should("eq", 200);
