@@ -18,7 +18,6 @@ describe("Teste HGTX Codex - Login", () => {
     cy.get("#loginInputEmail").type("qatestercodex@hgtx.com.br");
     cy.get("#mat-input-1").type("tester");
     cy.get('button[type="submit"]').click();
-
     cy.contains("Usuário e/ou Senha inválidos. Tente novamente").should("be.visible");
   });
 });

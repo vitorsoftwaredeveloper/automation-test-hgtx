@@ -2,7 +2,7 @@
 
 describe("example to-do app", () => {
   beforeEach(() => {
-    cy.login();
+   cy.loginCodex()
   });
 
   it("deve ser capaz de visualizar a página da inicial", () => {

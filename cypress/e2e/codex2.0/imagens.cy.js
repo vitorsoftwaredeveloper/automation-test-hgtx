@@ -2,7 +2,7 @@
 
 describe("Teste HGTX Codex - Imagens", () => {
   beforeEach(() => {
-    cy.login()
+    cy.loginCodex()
   });
 
   it("deve ser capaz de gerar uma imagem.", () => {

@@ -2,7 +2,7 @@
 
 describe("Teste HGTX Codex - Bate-papo", () => {
   beforeEach(() => {
-    cy.login()
+    cy.loginCodex()
   });
 
   it("deve visualizar a página de bate-papo com opções de novo chat e nova pasta", () => {

@@ -2,7 +2,7 @@
 
 describe("Teste HGTX Codex - Geração de Áudio", () => {
   beforeEach(() => {
-    cy.login()
+    cy.loginCodex()
   });
 
   it("deve visualizar a página de gravação de áudio com opções de geração e histórico.", () => {
