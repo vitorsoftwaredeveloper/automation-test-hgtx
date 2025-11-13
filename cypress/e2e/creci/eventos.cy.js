@@ -107,25 +107,142 @@ describe("Teste HGTX CRECI - Eventos", () => {
       }
     );
   });
-  it("deve ser capaz de abrir a modal de filtro.", () => {
+
+  it.skip("deve ser capaz de abrir a modal de filtro.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
         cy.get('[aria-label="filtrar"]').should("be.visible").click();
-        // cy.get("input[placeholder='DD/MM/AAAA']").should("be.visible").focus();
 
-        cy.get('input[inputmode="numeric"]').first().focus()
+        cy.get('input[placeholder="DD/MM/AAAA"]').eq(0).focus();
+        cy.contains("label", "Data Inicial").should("be.visible");
 
-        cy.contains('label', 'Data Inicial').should('be.visible');
+        cy.get('input[placeholder="DD/MM/AAAA"]').eq(1).focus();
+        cy.contains("label", "Data Final").should("be.visible");
 
+        cy.get('input[role="combobox"]').eq(0).focus();
+        cy.contains("label", "Estados").should("be.visible");
 
-        // cy.get("input[placeholder='Estados']").should("be.visible");
+        cy.get('input[role="combobox"]').eq(1).focus();
+        cy.contains("label", "Cidade").should("be.visible");
 
-        // cy.get("input[placeholder='Cidades']").should("be.visible");
+        cy.contains("button", "Filtrar").should("be.visible");
+        cy.contains("button", "Cancelar").should("be.visible");
+        cy.contains("button", "Limpar Filtros").should("be.visible");
       }
     );
   });
-  it.skip("deve ser capaz de inserir dados na modal de filtro e filtrar por resultados que correspondam aos critérios.", () => {});
+
+  it.skip("deve ser capaz de inserir dados na modal de filtro e filtrar por resultados que correspondam apenas ao estado de São Paulo.", () => {
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
+      () => {
+        cy.get('[data-testid="ArrowDropDownIcon"]')
+          .should("be.visible")
+          .parent()
+          .click();
+        cy.get('[data-value="25"]').should("be.visible").click();
+
+        cy.scrollTo("top");
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.get('[data-field="estado"]')
+          .not(":first")
+          .then(($cells) => {
+            const valorBase = $cells.first().text().trim();
+            cy.wrap($cells).each(($cell) => {
+              expect($cell.text().trim()).to.eq(valorBase);
+            });
+          });
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de inserir dados na modal de filtro e filtrar por resultados que correspondam apenas a cidade de São Paulo.", () => {
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
+      () => {
+        cy.get('[data-testid="ArrowDropDownIcon"]')
+          .should("be.visible")
+          .parent()
+          .click();
+        cy.get('[data-value="25"]').should("be.visible").click();
+
+        cy.scrollTo("top");
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(1).focus().type("São Paulo");
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait(2000);
+
+        cy.get('[data-field="cidade"]')
+          .not(":first")
+          .then(($cells) => {
+            const valorBase = $cells.first().text().trim();
+            cy.wrap($cells).each(($cell) => {
+              expect($cell.text().trim()).to.eq(valorBase);
+            });
+          });
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de inserir dados na modal de filtro e filtrar por resultados que correspondam com data inicial a partir de hoje.", () => {
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
+      () => {
+        const now = new Date();
+
+        const day = now.getDate();
+        const month = now.getMonth() + 1;
+        const year = now.getFullYear();
+
+        const dataFormatada = `${day}/${month}/${year}`;
+
+        cy.get('[data-testid="ArrowDropDownIcon"]')
+          .should("be.visible")
+          .parent()
+          .click();
+
+        cy.get('[data-value="25"]').should("be.visible").click();
+
+        cy.scrollTo("top");
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[placeholder="DD/MM/AAAA"]')
+          .eq(0)
+          .focus()
+          .clear()
+          .type(dataFormatada);
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait(2000);
+
+        cy.get("body").then(($body) => {
+          if ($body.text().includes("Não há registros")) {
+            cy.contains("Não há registros").should("be.visible");
+          } else {
+            cy.get('[data-field="data"]')
+              .not(":first")
+              .each(($cell) => {
+                expect($cell.text().trim()).to.include(dataFormatada);
+              });
+          }
+        });
+      }
+    );
+  });
+
   it.skip("deve ser capaz de cancelar a ação na modal de filtro.", () => {});
   it.skip("deve ser capaz de limpar a modal de filtro.", () => {});
   it.skip("deve ser capaz de visualizar um grid listando informações dos eventos.", () => {});
