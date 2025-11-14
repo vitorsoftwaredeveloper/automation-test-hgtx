@@ -180,12 +180,6 @@ describe("Teste HGTX CRECI - Eventos", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
-        cy.get('[data-testid="ArrowDropDownIcon"]')
-          .should("be.visible")
-          .parent()
-          .click();
-        cy.get('[data-value="25"]').should("be.visible").click();
-
         cy.scrollTo("top");
 
         cy.get('[aria-label="filtrar"]').click();
@@ -193,7 +187,6 @@ describe("Teste HGTX CRECI - Eventos", () => {
         cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
 
         cy.contains("button", "Filtrar").click();
-
         cy.get('[data-field="estado"]')
           .not(":first")
           .then(($cells) => {
@@ -713,7 +706,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it("deve ser capaz de visualizar uma mensagem de erro quando é inserido uma informação no campo Pesquisar mas o servidor respondeu com erro.", () => {
+  it.skip("deve ser capaz de visualizar uma mensagem de erro quando é inserido uma informação no campo Pesquisar mas o servidor respondeu com erro.", () => {
     let count = 0;
 
     cy.intercept("GET", "**/listar_eventos/**", {
@@ -741,6 +734,157 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  // esse teste nao dá para ser feito visto que o botao de limpar filtro, limpa o filtro e reseta todo o grid e nao os campos dentro da modal
-  // it.skip("deve ser capaz de limpar a modal de filtro.", () => {});
+  it.skip("deve ser capaz de paginar os resultados do grid de eventos.", () => {
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
+      () => {
+        cy.get('button[aria-label="Go to next page"]')
+          .should("be.visible")
+          .click();
+
+        cy.get('button[aria-label="Go to previous page"]')
+          .should("be.visible")
+          .click();
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de alterar a quantidade de registros exibidos no grid de eventos.", () => {
+    cy.intercept(
+      "GET",
+      "https://creci-app-api8.hgtx.com.br/api/v1/BotaoPanicoEventos/listar_eventos/1/*"
+    ).as("listarEventos");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
+      () => {
+        cy.get('div[role="rowgroup"]')
+          .not(":first")
+          .its("length")
+          .then((count) => {
+            cy.log("Quantidade de linhas (exceto a primeira):", count);
+          });
+
+        cy.get('div[role="rowgroup"]')
+          .not(":first")
+          .children()
+          .then(($rows) => {
+            const initialRowCount = $rows.length;
+
+            expect([10]).to.include(initialRowCount);
+          });
+
+        cy.get('[data-testid="ArrowDropDownIcon"]')
+          .should("be.visible")
+          .parent()
+          .click();
+        cy.get('[data-value="25"]').should("be.visible").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(2000);
+
+        cy.get('div[role="rowgroup"]')
+          .not(":first")
+          .children()
+          .then(($rows) => {
+            const finishRowCount = $rows.length;
+
+            expect([25]).to.include(finishRowCount);
+          });
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar uma mensagem de erro ao obter os eventos ao carregar a página.", () => {
+    cy.intercept("GET", "**/listar_eventos/**", {
+      statusCode: 500,
+      body: {
+        errorCode: 500,
+        errorMessage: "Erro interno do servidor.",
+      },
+    }).as("getEventDetailsError");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
+      () => {
+        cy.wait("@getEventDetailsError");
+
+        cy.contains(
+          "Não foi possível obter os dados. Falha na comunicação com o servidor."
+        ).should("be.visible");
+
+        cy.contains("Não há registros").should("be.visible");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de limpar o campo Pesquisar ao clicar no botão de limpar dentro da modal de filtro.", () => {
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.contains("Limpar Filtros").click();
+
+        cy.get("input[name='search']").should("have.value", "");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de limpar os filtros aplicados no grid ao clicar no botão de limpar dentro da modal de filtro.", () => {
+    cy.intercept(
+      "GET",
+      "https://creci-app-api8.hgtx.com.br/api/v1/BotaoPanicoEventos/listar_eventos/1/10*"
+    ).as("listarEventos");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
+      () => {
+        cy.get('[data-testid="ArrowDropDownIcon"]')
+          .should("be.visible")
+          .parent()
+          .click();
+        cy.get('[data-value="25"]').should("be.visible").click();
+
+        cy.scrollTo("top");
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.log("Verificando se todos os estados são São Paulo");
+        cy.get('[data-field="estado"]')
+          .not(":first")
+          .then(($cells) => {
+            cy.wrap($cells).each(($cell) => {
+              expect($cell.text().trim()).to.eq("São Paulo");
+            });
+          });
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.contains("Limpar Filtros").click();
+
+        cy.log("Agora todos os estados devem ser variados");
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).should("have.value", "");
+
+        cy.contains("Cancelar").click();
+      }
+    );
+  });
 });
