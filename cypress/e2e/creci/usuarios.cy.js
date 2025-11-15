@@ -274,7 +274,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar e editar dados pessoais do usuário clicando sobre o ícone na coluna Ações > Editar e depois salvar as alterações.", () => {
+  it.skip("deve ser capaz de visualizar e editar Dados pessoais do usuário clicando sobre o ícone na coluna Ações > Editar e depois salvar as alterações.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -367,7 +367,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro na obtenção dos dados do usuários clicando sobre o ícone na coluna Ações > Editar.", () => {
+  it.skip("deve ser capaz de visualizar uma mensagem de erro na obtenção de Dados pessoais do usuário clicando sobre o ícone na coluna Ações > Editar.", () => {
     let count = 0;
 
     cy.intercept(
@@ -415,553 +415,34 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  // stop here
-  it.skip("deve ser capaz de visualizar uma mensagem de erro quando tentar atualizar dados de usuário clicando sobre o ícone na coluna Ações > Editar > Salvar.", () => {
-    cy.origin(
-      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
-      () => {
-        cy.viewport(1920, 1080);
-
-        cy.get('[data-field="actions"]').eq(1).click();
-        cy.contains("Detalhes do Evento").should("be.visible");
-        cy.contains("div", "Geral").should("be.visible");
-        cy.contains("div", "Arquivos").should("be.visible");
-
-        cy.contains("p", "Evento").should("be.visible");
-        cy.contains("p", "Data").should("be.visible");
-        cy.contains("p", "Hora").should("be.visible");
-        cy.contains("p", "Usuário").should("be.visible");
-        cy.contains("p", "Estado").should("be.visible");
-        cy.contains("p", "Cidade").should("be.visible");
-
-        cy.contains("p", "Usuário Responsável").should("be.visible");
-        cy.contains("p", "Nome Completo").should("be.visible");
-        cy.contains("p", "CPF").should("be.visible");
-        cy.contains("p", "RG").should("be.visible");
-        cy.contains("p", "Data de Emissão").should("be.visible");
-        cy.contains("p", "Data de Nascimento").should("be.visible");
-        cy.contains("p", "DDD").should("be.visible");
-        cy.contains("p", "Telefone").should("be.visible");
-        cy.contains("p", "E-mail").should("be.visible");
-
-        cy.contains("a", "Ver Localização").should("be.visible");
-        cy.contains("button", "Ver detalhes do usuário").should("be.visible");
-        cy.contains("button", "Voltar").should("be.visible");
-      }
-    );
-  });
-
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao obter os detalhes dos eventos clicando sobre o ícone na coluna Ver detalhes.", () => {
-    cy.intercept("GET", "**/obter_evento/**", {
-      statusCode: 500,
-      body: {
-        errorCode: 500,
-        errorMessage: "Erro interno do servidor.",
-      },
-    }).as("getEventDetailsError");
-
-    cy.intercept("GET", "**/obter_arquivos/**", {
-      statusCode: 500,
-      body: {
-        errorCode: 500,
-        errorMessage: "Erro interno do servidor.",
-      },
-    }).as("getFilesError");
-
-    cy.origin(
-      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
-      () => {
-        cy.viewport(1920, 1080);
-
-        cy.get('[data-field="actions"]').eq(1).click();
-
-        cy.wait("@getEventDetailsError");
-
-        cy.contains(
-          "Não foi possível obter os dados. Falha na comunicação com o servidor."
-        ).should("be.visible");
-      }
-    );
-  });
-
-  it.skip("deve ser capaz de visualizar informações de arquivos do evento clicando sobre o ícone na coluna Ver detalhes.", () => {
-    cy.origin(
-      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
-      () => {
-        cy.viewport(1920, 1080);
-
-        cy.get('[data-field="actions"]').eq(3).click();
-        cy.contains("Detalhes do Evento").should("be.visible");
-        cy.contains("button", "Geral").should("be.visible");
-        cy.contains("button", "Arquivos").should("be.visible").click();
-        cy.contains("ID").should("be.visible");
-        cy.contains("Nome").should("be.visible");
-        cy.contains("Data de Criação").should("be.visible");
-        cy.contains("Horário de Criação").should("be.visible");
-        cy.contains("Duração").should("be.visible");
-        cy.contains("Tipo").should("be.visible");
-        cy.contains("Tamanho").should("be.visible");
-
-        cy.get("body").then(($body) => {
-          if ($body.text().includes("Não há registros")) {
-            cy.contains("Não há registros").should("be.visible");
-          } else {
-            cy.get('[data-field="id"]')
-              .not(":first")
-              .each(($cell) => {
-                expect($cell.text()).to.not.be.empty;
-              });
-            cy.get('[data-field="nomeUsuario"]')
-              .not(":first")
-              .each(($cell) => {
-                expect($cell.text()).to.not.be.empty;
-              });
-            cy.get('[data-field="dataCriacao"]')
-              .not(":first")
-              .each(($cell) => {
-                expect($cell.text()).to.not.be.empty;
-              });
-            cy.get('[data-field="horarioCriacao"]')
-              .not(":first")
-              .each(($cell) => {
-                expect($cell.text()).to.not.be.empty;
-              });
-            cy.get('[data-field="duracao"]')
-              .not(":first")
-              .each(($cell) => {
-                expect($cell.text()).to.not.be.empty;
-              });
-            cy.get('[data-field="tipo"]')
-              .not(":first")
-              .each(($cell) => {
-                expect($cell.text()).to.not.be.empty;
-              });
-            cy.get('[data-field="tamanho"]')
-              .not(":first")
-              .each(($cell) => {
-                expect($cell.text()).to.not.be.empty;
-              });
-          }
-        });
-      }
-    );
-  });
-
-  it.skip("deve ser capaz de visualizar detalhes dos eventos com informações de arquivos e realizar o download de vídeo.", () => {
+  it.skip("deve ser capaz de visualizar uma mensagem de erro quando tentar atualizar dados de usuário clicando sobre o botão Salvar.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
     cy.intercept(
       "GET",
-      "https://creci-app-api8.hgtx.com.br/api/v1/BotaoPanicoEventos/listar_eventos/1/10*",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
       (req) => {
         count++;
 
         if (count === 2) {
           const novaUrl =
-            "https://creci-app-api8.hgtx.com.br/api/v1/BotaoPanicoEventos/listar_eventos/1/10?nome=Fernando+Melo";
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
           req.url = novaUrl;
         }
         req.continue();
       }
     ).as("listarEventos");
 
-    cy.origin(
-      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
-      () => {
-        const name = "Fernando Melo";
-        cy.get("input[placeholder='Pesquisar']").clear().type(name);
-
-        cy.get('[aria-label="filtrar"]').click();
-
-        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
-
-        cy.get('li[role="option"]').should("be.visible").click();
-
-        cy.contains("button", "Filtrar").click();
-
-        cy.wait("@listarEventos");
-
-        cy.get('[data-field="nome"]')
-          .not(":first")
-          .each(($cell) => {
-            const rowText = $cell.parent().text();
-
-            if (
-              rowText.includes("Fernando Melo") &&
-              rowText.includes("Região Imediata de São Paulo")
-            ) {
-              cy.wrap($cell.parent())
-                .find(
-                  '[data-field="verDetalhes"] button, [aria-label="Ver Detalhes"], svg'
-                )
-                .scrollIntoView()
-                .should("be.visible")
-                .click({ force: true });
-
-              cy.contains("button", "Arquivos").should("be.visible").click();
-
-              cy.get('[data-field="tipo"]')
-                .not(":first")
-                .each(($cell) => {
-                  const rowText = $cell.parent().text();
-
-                  if (rowText.includes("Video")) {
-                    cy.wrap($cell.parent())
-                      .find(
-                        '[data-field="actions"] button, [aria-label="Download"]'
-                      )
-                      .should("be.visible")
-                      .click({ force: true });
-
-                    cy.contains("Download realizado com sucesso", {
-                      timeout: 10000,
-                    })
-                      .should("be.visible")
-                      .click();
-                  }
-                });
-            }
-          });
-      }
-    );
-  });
-
-  it.skip("deve ser capaz de visualizar detalhes dos eventos com informações de arquivos e realizar o download de áudio.", () => {
-    let count = 0;
-    cy.viewport(1920, 1080);
-
-    cy.intercept(
-      "GET",
-      "https://creci-app-api8.hgtx.com.br/api/v1/BotaoPanicoEventos/listar_eventos/1/10*",
-      (req) => {
-        count++;
-
-        if (count === 2) {
-          const novaUrl =
-            "https://creci-app-api8.hgtx.com.br/api/v1/BotaoPanicoEventos/listar_eventos/1/10?nome=Fernando+Melo";
-          req.url = novaUrl;
-        }
-        req.continue();
-      }
-    ).as("listarEventos");
-
-    cy.origin(
-      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
-      () => {
-        const name = "Fernando Melo";
-        cy.get("input[placeholder='Pesquisar']").clear().type(name);
-
-        cy.get('[aria-label="filtrar"]').click();
-
-        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
-
-        cy.get('li[role="option"]').should("be.visible").click();
-
-        cy.contains("button", "Filtrar").click();
-
-        cy.wait("@listarEventos");
-
-        cy.get('[data-field="nome"]')
-          .not(":first")
-          .each(($cell) => {
-            const rowText = $cell.parent().text();
-
-            if (
-              rowText.includes("Fernando Melo") &&
-              rowText.includes("Região Imediata de São Paulo")
-            ) {
-              cy.wrap($cell.parent())
-                .find(
-                  '[data-field="verDetalhes"] button, [aria-label="Ver Detalhes"], svg'
-                )
-                .scrollIntoView()
-                .should("be.visible")
-                .click({ force: true });
-
-              cy.contains("button", "Arquivos").should("be.visible").click();
-
-              cy.get('[data-field="tipo"]')
-                .not(":first")
-                .each(($cell) => {
-                  const rowText = $cell.parent().text();
-
-                  if (rowText.includes("Audio")) {
-                    cy.wrap($cell.parent())
-                      .find(
-                        '[data-field="actions"] button, [aria-label="Download"]'
-                      )
-                      .should("be.visible")
-                      .click({ force: true });
-
-                    cy.contains("Download realizado com sucesso", {
-                      timeout: 10000,
-                    })
-                      .should("be.visible")
-                      .click();
-                  }
-                });
-            }
-          });
-      }
-    );
-  });
-
-  it.skip("deve ser capaz de visualizar detalhes do usuário que criou o evento.", () => {
-    cy.origin(
-      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
-      () => {
-        cy.viewport(1920, 1080);
-
-        cy.get('[data-field="actions"]').eq(1).click();
-
-        cy.contains("button", "Ver detalhes do usuário")
-          .should("be.visible")
-          .click();
-
-        cy.contains("Editar Usuário Ryan").should("be.visible");
-        cy.contains("Dados Pessoais").should("be.visible");
-        cy.contains("Endereço").should("be.visible");
-        cy.contains("Inf. Médicas").should("be.visible");
-        cy.contains("Cont. Emergência").should("be.visible");
-        cy.contains("Gravações").should("be.visible");
-        cy.contains("Vídeos").should("be.visible");
-
-        cy.contains("Nome").should("be.visible");
-        cy.contains("CPF").should("be.visible");
-        cy.contains("RG").should("be.visible");
-        cy.contains("Data Nascimento").should("be.visible");
-        cy.contains("Data Emissão").should("be.visible");
-        cy.contains("DDD").should("be.visible");
-        cy.contains("Telefone").should("be.visible");
-        cy.contains("Email").should("be.visible");
-
-        cy.contains("button", "Salvar").should("be.visible");
-      }
-    );
-  });
-
-  it.skip("deve ser capaz de fechar a modal de Ver detalhes do evento clicando no ícone de fechar.", () => {
-    cy.origin(
-      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
-      () => {
-        cy.viewport(1920, 1080);
-
-        cy.get('[data-field="actions"]').eq(1).click();
-
-        cy.get("svg[data-testid='CloseIcon']").should("be.visible").click();
-
-        cy.contains("Detalhes do Evento").should("not.exist");
-      }
-    );
-  });
-
-  it.skip("deve ser capaz de visualizar opção de Ver Localização onde o evento irá acontecer.", () => {
-    let count = 0;
-    cy.viewport(1920, 1080);
-
-    cy.intercept(
-      "GET",
-      "https://creci-app-api8.hgtx.com.br/api/v1/BotaoPanicoEventos/listar_eventos/1/10*",
-      (req) => {
-        count++;
-
-        if (count === 2) {
-          const novaUrl =
-            "https://creci-app-api8.hgtx.com.br/api/v1/BotaoPanicoEventos/listar_eventos/1/10?nome=Fernando+Melo";
-          req.url = novaUrl;
-        }
-        req.continue();
-      }
-    ).as("listarEventos");
-
-    cy.origin(
-      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
-      () => {
-        const name = "Fernando Melo";
-        cy.get("input[placeholder='Pesquisar']").clear().type(name);
-
-        cy.get('[aria-label="filtrar"]').click();
-
-        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
-
-        cy.get('li[role="option"]').should("be.visible").click();
-
-        cy.contains("button", "Filtrar").click();
-
-        cy.wait("@listarEventos");
-
-        cy.get('[data-field="nome"]')
-          .not(":first")
-          .each(($cell) => {
-            const rowText = $cell.parent().text();
-
-            if (
-              rowText.includes("Fernando Melo") &&
-              rowText.includes("Região Imediata de São Paulo")
-            ) {
-              cy.wrap($cell.parent())
-                .find(
-                  '[data-field="verDetalhes"] button, [aria-label="Ver Detalhes"], svg'
-                )
-                .scrollIntoView()
-                .should("be.visible")
-                .click({ force: true });
-
-              cy.contains("a", "Ver Localização")
-                .should("have.attr", "target", "_blank")
-                .click();
-            }
-          });
-      }
-    );
-  });
-
-  it.skip("deve ser capaz de visualizar uma mensagem de erro quando é inserido uma informação no campo Pesquisar mas o servidor respondeu com erro.", () => {
-    let count = 0;
-
-    cy.intercept("GET", "**/listar_eventos/**", {
+    cy.intercept("POST", "**/editar_dados_pessoais", {
       statusCode: 500,
-      body: {
-        errorCode: 500,
-        errorMessage: "Erro interno do servidor.",
-      },
-    }).as("getEventDetailsError");
+    }).as("editUserDataError");
 
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
       () => {
         const name = "Fernando Melo";
         cy.get("input[placeholder='Pesquisar']").clear().type(name);
-
-        cy.wait("@getEventDetailsError");
-
-        cy.contains(
-          "Não foi possível obter os dados. Falha na comunicação com o servidor."
-        ).should("be.visible");
-
-        cy.contains("Não há registros").should("be.visible");
-      }
-    );
-  });
-
-  it.skip("deve ser capaz de paginar os resultados do grid de eventos.", () => {
-    cy.origin(
-      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
-      () => {
-        cy.get('button[aria-label="Go to next page"]')
-          .should("be.visible")
-          .click();
-
-        cy.get('button[aria-label="Go to previous page"]')
-          .should("be.visible")
-          .click();
-      }
-    );
-  });
-
-  it.skip("deve ser capaz de alterar a quantidade de registros exibidos no grid de eventos.", () => {
-    cy.intercept(
-      "GET",
-      "https://creci-app-api8.hgtx.com.br/api/v1/BotaoPanicoEventos/listar_eventos/1/*"
-    ).as("listarEventos");
-
-    cy.origin(
-      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
-      () => {
-        cy.get('div[role="rowgroup"]')
-          .not(":first")
-          .its("length")
-          .then((count) => {
-            cy.log("Quantidade de linhas (exceto a primeira):", count);
-          });
-
-        cy.get('div[role="rowgroup"]')
-          .not(":first")
-          .children()
-          .then(($rows) => {
-            const initialRowCount = $rows.length;
-
-            expect([10]).to.include(initialRowCount);
-          });
-
-        cy.get('[data-testid="ArrowDropDownIcon"]')
-          .should("be.visible")
-          .parent()
-          .click();
-        cy.get('[data-value="25"]').should("be.visible").click();
-
-        cy.wait("@listarEventos");
-
-        cy.wait(2000);
-
-        cy.get('div[role="rowgroup"]')
-          .not(":first")
-          .children()
-          .then(($rows) => {
-            const finishRowCount = $rows.length;
-
-            expect([25]).to.include(finishRowCount);
-          });
-      }
-    );
-  });
-
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao obter os eventos ao carregar a página.", () => {
-    cy.intercept("GET", "**/listar_eventos/**", {
-      statusCode: 500,
-      body: {
-        errorCode: 500,
-        errorMessage: "Erro interno do servidor.",
-      },
-    }).as("getEventDetailsError");
-
-    cy.origin(
-      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
-      () => {
-        cy.wait("@getEventDetailsError");
-
-        cy.contains(
-          "Não foi possível obter os dados. Falha na comunicação com o servidor."
-        ).should("be.visible");
-
-        cy.contains("Não há registros").should("be.visible");
-      }
-    );
-  });
-
-  it.skip("deve ser capaz de limpar o campo Pesquisar ao clicar no botão de limpar dentro da modal de filtro.", () => {
-    cy.origin(
-      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
-      () => {
-        const name = "Fernando Melo";
-        cy.get("input[placeholder='Pesquisar']").clear().type(name);
-
-        cy.get('[aria-label="filtrar"]').click();
-
-        cy.contains("Limpar Filtros").click();
-
-        cy.get("input[name='search']").should("have.value", "");
-      }
-    );
-  });
-
-  it.skip("deve ser capaz de limpar os filtros aplicados no grid ao clicar no botão de limpar dentro da modal de filtro.", () => {
-    cy.intercept(
-      "GET",
-      "https://creci-app-api8.hgtx.com.br/api/v1/BotaoPanicoEventos/listar_eventos/1/10*"
-    ).as("listarEventos");
-
-    cy.origin(
-      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
-      () => {
-        cy.get('[data-testid="ArrowDropDownIcon"]')
-          .should("be.visible")
-          .parent()
-          .click();
-        cy.get('[data-value="25"]').should("be.visible").click();
-
-        cy.scrollTo("top");
 
         cy.get('[aria-label="filtrar"]').click();
 
@@ -975,27 +456,1510 @@ describe("Teste HGTX CRECI - Usuários", () => {
 
         cy.wait(1000);
 
-        cy.log("Verificando se todos os estados são São Paulo");
-        cy.get('[data-field="estado"]')
-          .not(":first")
-          .then(($cells) => {
-            cy.wrap($cells).each(($cell) => {
-              expect($cell.text().trim()).to.eq("São Paulo");
-            });
-          });
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
 
-        cy.get('[aria-label="filtrar"]').click();
+        cy.wait(1000);
+        cy.contains("Salvar").should("be.visible").click();
 
-        cy.contains("Limpar Filtros").click();
-
-        cy.log("Agora todos os estados devem ser variados");
-
-        cy.get('[aria-label="filtrar"]').click();
-
-        cy.get('input[role="combobox"]').eq(0).should("have.value", "");
-
-        cy.contains("Cancelar").click();
+        cy.contains("Erro ao salvar os dados").should("be.visible");
       }
     );
   });
+
+  it.skip("deve ser capaz de visualizar e editar Endereço do usuário clicando sobre o ícone na coluna Ações > Editar > Endereço e depois salvar as alterações.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Endereço").should("be.visible").click();
+        cy.wait(1000);
+
+        cy.log("Guardando dados do endereço para edição");
+        let tipoEndereco,
+          cep,
+          logradouro,
+          complemento,
+          bairro,
+          cidade,
+          uf,
+          numero;
+
+        cy.get('input[name="tipoEndereco"]')
+          .invoke("val")
+          .then((val) => (tipoEndereco = val));
+
+        cy.get('input[name="cep"]')
+          .invoke("val")
+          .then((val) => (cep = val));
+
+        cy.get('input[name="logradouro"]')
+          .invoke("val")
+          .then((val) => (logradouro = val));
+
+        cy.get('input[name="complemento"]')
+          .invoke("val")
+          .then((val) => (complemento = val));
+
+        cy.get('input[name="bairro"]')
+          .invoke("val")
+          .then((val) => (bairro = val));
+
+        cy.get('input[name="cidade"]')
+          .invoke("val")
+          .then((val) => (cidade = val));
+
+        cy.get('input[name="uf"]')
+          .invoke("val")
+          .then((val) => (uf = val));
+
+        cy.get('input[name="numero"]')
+          .invoke("val")
+          .then((val) => (numero = val));
+
+        cy.then(() => {
+          cy.log("tipoEndereco:", tipoEndereco);
+          cy.log("cep:", cep);
+          cy.log("logradouro:", logradouro);
+          cy.log("complemento:", complemento);
+          cy.log("bairro:", bairro);
+          cy.log("cidade:", cidade);
+          cy.log("uf:", uf);
+          cy.log("numero:", numero);
+
+          cy.log("Editando dados do usuário");
+          cy.get('div[role="combobox"][aria-haspopup="listbox"]').eq(1).click();
+          cy.get(`li[role="option"][data-value=${tipoEndereco}]`)
+            .should("be.visible")
+            .click();
+          cy.get('input[name="cep"]').clear().type(cep);
+          cy.get('input[name="logradouro"]').clear().type(logradouro);
+          cy.get('input[name="complemento"]').clear().type(complemento);
+          cy.get('input[name="bairro"]').clear().type(bairro);
+          cy.get('input[name="cidade"]').clear().type(cidade);
+          cy.get('input[name="uf"]').clear().type(uf);
+          cy.get('input[name="numero"]').clear().type(numero);
+
+          cy.contains("button", "Salvar").should("be.visible").click();
+          cy.contains("Endereço salvo com sucesso").should("be.visible");
+          cy.log("Fechando a modal de edição");
+          cy.get("body").type("{esc}");
+        });
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de a requisição retornar sucesso ao buscar um cep existente no Ações > Editar > Endereço.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.intercept("GET", "**/viacep.com.br/**").as("getCep");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Endereço").should("be.visible").click();
+        cy.wait(1000);
+
+        cy.get('input[name="cep"]').clear().type("58073316");
+        cy.contains("button", "Buscar").should("be.visible").click();
+        cy.wait("@getCep").its("response.statusCode").should("eq", 200);
+
+        cy.log("Fechando a modal de edição");
+        cy.get("body").type("{esc}");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar uma mensagem de erro ao buscar um cep não existente no Ações > Editar > Endereço.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Endereço").should("be.visible").click();
+        cy.wait(1000);
+
+        cy.get('input[name="cep"]').clear().type("00000000");
+        cy.contains("button", "Buscar").should("be.visible").click();
+
+        cy.contains("CEP não encontrado").should("be.visible");
+        cy.log("Fechando a modal de edição");
+        cy.get("body").type("{esc}");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar uma mensagem de erro na obtenção de Endereço do usuário clicando sobre o ícone na coluna Ações > Editar > Endereço.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.intercept("GET", "**/obter_endereco/**", {
+      statusCode: 500,
+    }).as("getAddressError");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Endereço").should("be.visible").click();
+        cy.wait(1000);
+
+        cy.wait("@getAddressError");
+
+        cy.contains("Erro ao obter o endereço").should("be.visible");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar uma mensagem de erro quando tentar atualizar Endereço do usuário clicando sobre o botão Salvar.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.intercept("POST", "**/editar_endereco", {
+      statusCode: 500,
+    }).as("editAddressError");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Endereço").should("be.visible").click();
+        cy.wait(1000);
+
+        cy.contains("Salvar").should("be.visible").click();
+
+        cy.contains("Erro ao salvar o endereço").should("be.visible");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar e editar Informações médicas do usuário clicando sobre o ícone na coluna Ações > Editar > Inf. Médicas e depois salvar as alterações.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Inf. Médicas").should("be.visible").click();
+        cy.wait(1000);
+
+        cy.log("Guardando dados de Inf. Médicas para edição");
+        let tipoSanguineo,
+          alergias,
+          condicoesMedicas,
+          medicacoes,
+          historicoDoencas;
+
+        cy.get('input[name="tipoSanguineo"]')
+          .invoke("val")
+          .then((val) => (tipoSanguineo = val));
+
+        cy.get('input[name="alergias"]')
+          .invoke("val")
+          .then((val) => (alergias = val));
+
+        cy.get('input[name="condMedicasPreEstab"]')
+          .invoke("val")
+          .then((val) => (condicoesMedicas = val));
+
+        cy.get('input[name="medicamentos"]')
+          .invoke("val")
+          .then((val) => (medicacoes = val));
+
+        cy.get('input[name="historicoDoencas"]')
+          .invoke("val")
+          .then((val) => (historicoDoencas = val));
+
+        cy.then(() => {
+          cy.log("tipoSanguineo:", tipoSanguineo);
+          cy.log("alergias:", alergias);
+          cy.log("condicoesMedicas:", condicoesMedicas);
+          cy.log("medicacoes:", medicacoes);
+          cy.log("historicoDoencas:", historicoDoencas);
+
+          cy.log("Editando dados do usuário");
+          cy.get('div[role="combobox"][aria-haspopup="listbox"]').eq(1).click();
+          cy.get(`li[role="option"][data-value=${tipoSanguineo}]`)
+            .should("be.visible")
+            .click();
+          cy.get('input[name="alergias"]')
+            .clear()
+            .type(alergias || "Nenhuma");
+          cy.get('input[name="condMedicasPreEstab"]')
+            .clear()
+            .type(condicoesMedicas || "Nenhuma");
+          cy.get('input[name="medicamentos"]')
+            .clear()
+            .type(medicacoes || "Nenhuma");
+          cy.get('input[name="historicoDoencas"]')
+            .clear()
+            .type(historicoDoencas || "Nenhuma");
+
+          cy.contains("button", "Salvar").should("be.visible").click();
+          cy.contains("Dados salvos com sucesso").should("be.visible");
+          cy.log("Fechando a modal de edição");
+          cy.get("body").type("{esc}");
+        });
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar uma mensagem de erro na obtenção de Informações médicas do usuário clicando sobre o ícone na coluna Ações > Editar > Inf. Médicas.", () => {
+    let count = 0;
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.intercept("GET", "**/obter_informacoes_medicas/**", {
+      statusCode: 500,
+    }).as("getMedicalInfoError");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Inf. Médicas").should("be.visible").click();
+
+        cy.contains("Erro ao buscar os dados").should("be.visible");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar uma mensagem de erro quando tentar atualizar dados de Informações médicas clicando sobre o botão Salvar.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.intercept("POST", "**/editar_informacoes_medicas", {
+      statusCode: 500,
+    }).as("editMedicalInfoError");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Inf. Médicas").should("be.visible").click();
+
+        cy.wait(1000);
+        cy.contains("Salvar").should("be.visible").click();
+
+        cy.contains("Erro ao salvar os dados").should("be.visible");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Cont. Emergência").should("be.visible").click();
+        cy.wait(1000);
+
+        cy.contains("Qnt. de Contatos Cadastrados").should("be.visible");
+        cy.contains("Novo Contato").should("be.visible");
+
+        cy.log("Fechando a modal");
+        cy.get("body").type("{esc}");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar uma modal para cadastro de novos contatos na aba Cont. Emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência > Novo Contato.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Cont. Emergência").should("be.visible").click();
+
+        cy.contains("Novo Contato").should("be.visible").click();
+
+        cy.get('input[name="nome"]').focus();
+        cy.contains("label", "Nome").should("be.visible");
+
+        cy.get('input[name="ddd"]').focus();
+        cy.contains("label", "DDD").should("be.visible");
+
+        cy.get('input[name="telefone"]').focus();
+        cy.contains("label", "Telefone").should("be.visible");
+
+        cy.get('input[name="email"]').focus();
+        cy.contains("label", "Email").should("be.visible");
+
+        cy.contains("Tipo de Contato").should("be.visible");
+        cy.contains(
+          "Envio de notificação (Após o acionamento do botão do pânico)"
+        ).should("be.visible");
+        cy.contains("Envio de notificação no WhatsApp").should("be.visible");
+        cy.contains("button", "Cancelar").should("be.visible");
+        cy.contains("button", "Salvar").should("be.visible");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de fechar a modal para cadastrar novos contatos na aba Cont. Emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência > Novo Contato > Cancelar.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Cont. Emergência").should("be.visible").click();
+
+        cy.contains("Novo Contato").should("be.visible").click();
+
+        cy.contains("button", "Cancelar").should("be.visible").click();
+        cy.contains("Salvar").should("not.exist");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de cadastrar novos contatos na aba Cont. Emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência > Novo Contato > Salvar.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Cont. Emergência").should("be.visible").click();
+
+        cy.contains("Novo Contato").should("be.visible").click();
+
+        cy.get('input[name="nome"]').focus().type("Contato de Teste");
+
+        cy.get('input[name="ddd"]').focus().type("11");
+
+        cy.get('input[name="telefone"]').focus().type("999999999");
+
+        cy.get('input[name="email"]').focus().type("teste@email.com");
+
+        cy.contains("button", "Salvar").should("be.visible").click();
+
+        cy.wait(1000);
+
+        cy.contains("Contato salvo com sucesso").should("be.visible");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar uma mensagem de 'Campo obrigatório' aba Cont. Emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência > Novo Contato > Salvar.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Cont. Emergência").should("be.visible").click();
+
+        cy.contains("Novo Contato").should("be.visible").click();
+
+        cy.get('input[name="nome"]').focus().type(" ");
+
+        cy.get('input[name="ddd"]').focus().type(" ");
+
+        cy.get('input[name="telefone"]').focus().type(" ");
+
+        cy.get('input[name="email"]').focus().type(" ");
+
+        cy.contains("button", "Salvar").should("be.visible").click();
+
+        cy.wait(1000);
+
+        cy.contains("Campo obrigatório").should("be.visible");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar uma mensagem de erro ao tentar cadastrar um novo contato na aba Cont. Emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência > Novo Contato > Salvar.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.intercept("POST", "**/contatos_emergenciais", {
+      statusCode: 500,
+    }).as("addEmergencyContactError");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Cont. Emergência").should("be.visible").click();
+
+        cy.contains("Novo Contato").should("be.visible").click();
+
+        cy.get('input[name="nome"]').focus().type("Contato de Teste");
+
+        cy.get('input[name="ddd"]').focus().type("11");
+
+        cy.get('input[name="telefone"]').focus().type("999999999");
+
+        cy.get('input[name="email"]').focus().type("teste@email.com");
+
+        cy.contains("button", "Salvar").should("be.visible").click();
+
+        cy.wait(1000);
+
+        cy.contains("Não foi possível salvar o contato").should("be.visible");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar uma mensagem de erro na obtenção de Cont. Emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência.", () => {
+    let count = 0;
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.intercept("GET", "**/listar_contatos_emergenciais/**", {
+      statusCode: 500,
+    }).as("getEmergencyContactsError");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Cont. Emergência").should("be.visible").click();
+
+        cy.contains("Não foi possível obter os dados").should("be.visible");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência. e editar as informações de um contato.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Cont. Emergência").should("be.visible").click();
+        cy.wait(1000);
+
+        cy.get('[aria-label="more"][role="menuitem')
+          .should("be.visible")
+          .eq(1)
+          .click();
+
+        cy.contains("li", "Editar").should("be.visible").click();
+
+        cy.wait(1000);
+
+        let nome, ddd, telefone, email;
+
+        cy.get('input[name="nome"]')
+          .invoke("val")
+          .then((val) => (nome = val));
+        cy.get('input[name="ddd"]')
+          .invoke("val")
+          .then((val) => (ddd = val));
+        cy.get('input[name="telefone"]')
+          .invoke("val")
+          .then((val) => (telefone = val));
+        cy.get('input[name="email"]')
+          .invoke("val")
+          .then((val) => (email = val));
+
+        cy.then(() => {
+          cy.log("nome:", nome);
+          cy.log("ddd:", ddd);
+          cy.log("telefone:", telefone);
+          cy.log("email:", email);
+
+          cy.log("Editando dados do usuário");
+          cy.get('input[name="nome"]').clear().type(nome);
+          cy.get('input[name="ddd"]').clear().type(ddd);
+          cy.get('input[name="telefone"]').clear().type(telefone);
+          cy.get('input[name="email"]').clear().type(email);
+
+          cy.contains("button", "Salvar").should("be.visible").click();
+          cy.contains("Contato salvo com sucesso").should("be.visible");
+
+          cy.log("Fechando a modal de edição");
+          cy.get("body").type("{esc}");
+        });
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar uma mensagem de erro na aba Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência. > Editar, pois o servidor retornou um erro.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.intercept("GET", "**/obter_contatos_emergenciais/**", {
+      statusCode: 500,
+    }).as("getEmergencyContactsError");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Cont. Emergência").should("be.visible").click();
+        cy.wait(1000);
+
+        cy.get('[aria-label="more"][role="menuitem')
+          .should("be.visible")
+          .eq(1)
+          .click();
+
+        cy.contains("li", "Editar").should("be.visible").click();
+
+        cy.contains("Não foi possível obter os dados").should("be.visible");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência. e editar as informações de um contato, mas cancelar a operação de edição.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Cont. Emergência").should("be.visible").click();
+        cy.wait(1000);
+
+        cy.get('[aria-label="more"][role="menuitem')
+          .should("be.visible")
+          .eq(1)
+          .click();
+
+        cy.contains("li", "Editar").should("be.visible").click();
+
+        cy.wait(1000);
+        cy.contains("button", "Cancelar").should("be.visible").click();
+        cy.contains("Salvar").should("not.exist");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar uma modal para remover um contato na aba de Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência, clicando no botão de Excluir na coluna Ações.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Cont. Emergência").should("be.visible").click();
+
+        cy.contains("Novo Contato").should("be.visible").click();
+
+        cy.get('input[name="nome"]').focus().type("Contato de Teste");
+
+        cy.get('input[name="ddd"]').focus().type("11");
+
+        cy.get('input[name="telefone"]').focus().type("999999999");
+
+        cy.get('input[name="email"]').focus().type("teste@email.com");
+
+        cy.contains("button", "Salvar").should("be.visible").click();
+
+        cy.wait(1000);
+
+        cy.contains("Contato salvo com sucesso").should("be.visible");
+
+        cy.get('[aria-label="more"][role="menuitem')
+          .should("be.visible")
+          .last()
+          .click();
+
+        cy.contains("li", "Excluir").should("be.visible").click();
+        cy.contains("Excluir").should("be.visible");
+        cy.contains("Deseja prosseguir com a exclusão do registro?").should(
+          "be.visible"
+        );
+        cy.contains("button", "Cancelar").should("be.visible");
+        cy.contains("button", "Confirmar").should("be.visible").click();
+
+        cy.contains("Contato excluído com sucesso").should("be.visible");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar uma mensagem de erro ao tentar excluir um contato na aba de Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência, clicando no botão de Excluir na coluna Ações.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.intercept("DELETE", "**/excluir/**", {
+      statusCode: 500,
+    }).as("deleteEmergencyContactError");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Cont. Emergência").should("be.visible").click();
+
+        cy.contains("Novo Contato").should("be.visible").click();
+
+        cy.get('input[name="nome"]').focus().type("Contato de Teste");
+
+        cy.get('input[name="ddd"]').focus().type("11");
+
+        cy.get('input[name="telefone"]').focus().type("999999999");
+
+        cy.get('input[name="email"]').focus().type("teste@email.com");
+
+        cy.contains("button", "Salvar").should("be.visible").click();
+
+        cy.wait(1000);
+
+        cy.contains("Contato salvo com sucesso").should("be.visible");
+
+        cy.get('[aria-label="more"][role="menuitem')
+          .should("be.visible")
+          .last()
+          .click();
+
+        cy.contains("li", "Excluir").should("be.visible").click();
+        cy.contains("Excluir").should("be.visible");
+        cy.contains("Deseja prosseguir com a exclusão do registro?").should(
+          "be.visible"
+        );
+        cy.contains("button", "Cancelar").should("be.visible");
+        cy.contains("button", "Confirmar").should("be.visible").click();
+
+        cy.contains("Não foi possível excluir o contato").should("be.visible");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de cancelar a remoção de um contato na aba de Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência, clicando no botão de Excluir na coluna Ações.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.intercept("DELETE", "**/excluir/**", {
+      statusCode: 500,
+    }).as("deleteEmergencyContactError");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Cont. Emergência").should("be.visible").click();
+
+        cy.contains("Novo Contato").should("be.visible").click();
+
+        cy.get('input[name="nome"]').focus().type("Contato de Teste");
+
+        cy.get('input[name="ddd"]').focus().type("11");
+
+        cy.get('input[name="telefone"]').focus().type("999999999");
+
+        cy.get('input[name="email"]').focus().type("teste@email.com");
+
+        cy.contains("button", "Salvar").should("be.visible").click();
+
+        cy.wait(1000);
+
+        cy.contains("Contato salvo com sucesso").should("be.visible");
+
+        cy.get('[aria-label="more"][role="menuitem')
+          .should("be.visible")
+          .last()
+          .click();
+
+        cy.contains("li", "Excluir").should("be.visible").click();
+        cy.contains("Excluir").should("be.visible");
+        cy.contains("Deseja prosseguir com a exclusão do registro?").should(
+          "be.visible"
+        );
+        cy.contains("button", "Cancelar").should("be.visible").click();
+        cy.contains("button", "Confirmar").should("be.visible");
+
+        cy.contains("Deseja prosseguir com a exclusão do registro?").should(
+          "not.be.visible"
+        );
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de paginar os Contatos de emergência do grid de contatos.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.intercept("DELETE", "**/excluir/**", {
+      statusCode: 500,
+    }).as("deleteEmergencyContactError");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Cont. Emergência").should("be.visible").click();
+
+        cy.wait(1000);
+
+        cy.get('button[aria-label="Go to next page"]').should("be.visible");
+
+        cy.get('button[aria-label="Go to previous page"]').should("be.visible");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de paginar os resultados do grid de Contatos de emergência.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.intercept("DELETE", "**/excluir/**", {
+      statusCode: 500,
+    }).as("deleteEmergencyContactError");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Cont. Emergência").should("be.visible").click();
+
+        cy.wait(1000);
+
+        cy.get('[data-testid="ArrowDropDownIcon"]')
+          .should("be.visible")
+          .parent()
+          .eq(1)
+          .click();
+
+        cy.get('[data-value="25"]').should("be.visible").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('div[role="rowgroup"]')
+          .not(":first")
+          .children()
+          .then(($rows) => {
+            const finishRowCount = $rows.length;
+
+            expect(finishRowCount).to.greaterThan(10);
+          });
+      }
+    );
+  });
+
+  // falta agora gravacoes
 });
