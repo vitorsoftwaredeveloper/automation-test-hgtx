@@ -84,6 +84,56 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
+  it.skip("deve ser capaz de paginar a lista de usuários.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        cy.contains("p", /1.?10 of/).should("be.visible");
+
+        cy.get('button[aria-label="Go to next page"]')
+          .should("be.visible")
+          .click();
+
+        cy.wait(2000);
+
+        cy.contains("p", /11.?20 of/).should("be.visible");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de paginar os resultados do grid (rows per page) de usuários.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        cy.wait(2000);
+
+        cy.get('[data-testid="ArrowDropDownIcon"]')
+          .should("be.visible")
+          .parent()
+          .click();
+
+        cy.get('[data-value="25"]').should("be.visible").click();
+
+        cy.wait(1000);
+
+        cy.get('div[role="rowgroup"]')
+          .not(":first")
+          .children()
+          .then(($rows) => {
+            const finishRowCount = $rows.length;
+
+            expect(finishRowCount).to.greaterThan(10);
+          });
+      }
+    );
+  });
+
   // ------------------ Input de pesquisa ------------------
 
   it.skip("deve ser capaz de inserir dados no campo Pesquisar e filtrar os usuários pela informação inserida.", () => {
@@ -3094,4 +3144,363 @@ describe("Teste HGTX CRECI - Usuários", () => {
       }
     );
   });
+
+  // ------------------ Inativar  ------------------
+
+  // ------------------ Listar Eventos  ------------------
+
+  it.skip("deve ser capaz de visualizar os eventos que o usuário cadastrou.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.intercept("DELETE", "**/excluir/**", {
+      statusCode: 500,
+    }).as("deleteRecordingError");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Listar Eventos").should("be.visible").click();
+        cy.wait(1000);
+
+        cy.contains("Ver Eventos desse Usuário").should("be.visible");
+        cy.get('[data-field="idEvento"]').should("be.exist");
+        cy.get('[data-field="data"]').should("be.exist");
+        cy.get('[data-field="Hora"]').should("be.exist");
+        cy.get('[data-field="cidade"]').should("be.exist");
+        cy.get('[data-field="Ver Detalhes"]').should("be.exist");
+        cy.get('[data-field="actions"]').should("be.exist");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar uma mensagem de erro ao listar eventos do usuário.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.intercept("GET", "**/listar_eventos/**", {
+      statusCode: 500,
+    }).as("listEventsError");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Listar Eventos").should("be.visible").click();
+        cy.wait(1000);
+
+        cy.contains(
+          "Não foi possível obter os dados. Falha na comunicação com o servidor."
+        ).should("be.visible");
+        cy.contains("Não há registros").should("be.visible");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar os detalhes de um evento ao clicar no ícone na coluna Ver Detalhes.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Listar Eventos").should("be.visible").click();
+        cy.wait(1000);
+
+        cy.get('[data-testid="OpenInNewIcon"]').first().click();
+
+        cy.contains("Detalhes do Evento").should("be.visible");
+        cy.contains("p", "Evento").should("be.visible");
+        cy.contains("p", "Data").should("be.visible");
+        cy.contains("p", "Hora").should("be.visible");
+        cy.contains("p", "Usuário").should("be.visible");
+        cy.contains("p", "Estado").should("be.visible");
+        cy.contains("p", "Cidade").should("be.visible");
+
+        cy.contains("p", "Usuário Responsável").should("be.visible");
+        cy.contains("p", "Nome Completo").should("be.visible");
+        cy.contains("p", "CPF").should("be.visible");
+        cy.contains("p", "RG").should("be.visible");
+        cy.contains("p", "Data de Emissão").should("be.visible");
+        cy.contains("p", "Data de Nascimento").should("be.visible");
+        cy.contains("p", "DDD").should("be.visible");
+        cy.contains("p", "Telefone").should("be.visible");
+        cy.contains("p", "E-mail").should("be.visible");
+
+        cy.contains("a", "Ver Localização").should("be.visible");
+        cy.contains("button", "Ver detalhes do usuário").should("be.visible");
+        cy.contains("button", "Voltar").should("be.visible");
+      }
+    );
+  });
+
+  it.skip("deve ser capaz de visualizar uma mensagem de erro ao tentar visualizar osos detalhes de um evento ao clicar no ícone na coluna Ver Detalhes.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.intercept("GET", "**/obter_evento/**", {
+      statusCode: 500,
+    }).as("getEventDetailsError");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Listar Eventos").should("be.visible").click();
+        cy.wait(1000);
+
+        cy.get('[data-testid="OpenInNewIcon"]').first().click();
+        cy.contains(
+          "Não foi possível obter os dados do evento. Falha na comunicação com o servidor."
+        ).should("be.visible");
+      }
+    );
+  });
+
+  // esses dois testes abaixo só podem ser liberados após criar um usuário que possua muitos eventos cadastrados
+  // it.skip("deve ser capaz de paginar os Contatos de emergência do grid de contatos.", () => {
+  //   let count = 0;
+  //   cy.viewport(1920, 1080);
+
+  //   cy.intercept(
+  //     "GET",
+  //     "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+  //     (req) => {
+  //       count++;
+
+  //       if (count === 2) {
+  //         const novaUrl =
+  //           "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+  //         req.url = novaUrl;
+  //       }
+  //       req.continue();
+  //     }
+  //   ).as("listarEventos");
+
+  //   cy.intercept("DELETE", "**/excluir/**", {
+  //     statusCode: 500,
+  //   }).as("deleteEmergencyContactError");
+
+  //   cy.origin(
+  //     "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+  //     () => {
+  //       const name = "Fernando Melo";
+  //       cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+  //       cy.get('[aria-label="filtrar"]').click();
+
+  //       cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+  //       cy.get('li[role="option"]').should("be.visible").click();
+
+  //       cy.contains("button", "Filtrar").click();
+
+  //       cy.wait("@listarEventos");
+
+  //       cy.wait(1000);
+
+  //       cy.get('[role="menuitem"]').should("be.visible").first().click();
+  //       cy.contains("Editar").should("be.visible").click();
+  //       cy.contains("Cont. Emergência").should("be.visible").click();
+
+  //       cy.wait(1000);
+
+  //       cy.get('button[aria-label="Go to next page"]').should("be.visible");
+
+  //       cy.get('button[aria-label="Go to previous page"]').should("be.visible");
+  //     }
+  //   );
+  // });
+
+  // it.skip("deve ser capaz de paginar os resultados do grid de Contatos de emergência.", () => {
+  //   let count = 0;
+  //   cy.viewport(1920, 1080);
+
+  //   cy.intercept(
+  //     "GET",
+  //     "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+  //     (req) => {
+  //       count++;
+
+  //       if (count === 2) {
+  //         const novaUrl =
+  //           "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+  //         req.url = novaUrl;
+  //       }
+  //       req.continue();
+  //     }
+  //   ).as("listarEventos");
+
+  //   cy.intercept("DELETE", "**/excluir/**", {
+  //     statusCode: 500,
+  //   }).as("deleteEmergencyContactError");
+
+  //   cy.origin(
+  //     "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+  //     () => {
+  //       const name = "Fernando Melo";
+  //       cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+  //       cy.get('[aria-label="filtrar"]').click();
+
+  //       cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+  //       cy.get('li[role="option"]').should("be.visible").click();
+
+  //       cy.contains("button", "Filtrar").click();
+
+  //       cy.wait("@listarEventos");
+
+  //       cy.wait(1000);
+
+  //       cy.get('[role="menuitem"]').should("be.visible").first().click();
+  //       cy.contains("Listar Eventos").should("be.visible").click();
+
+  //       cy.wait(1000);
+
+  //       cy.get('[data-testid="ArrowDropDownIcon"]')
+  //         .should("be.visible")
+  //         .parent()
+  //         .eq(1)
+  //         .click();
+
+  //       cy.get('[data-value="25"]').should("be.visible").click();
+
+  //       cy.wait("@listarEventos");
+
+  //       cy.wait(1000);
+
+  //       cy.get('div[role="rowgroup"]')
+  //         .not(":first")
+  //         .children()
+  //         .then(($rows) => {
+  //           const finishRowCount = $rows.length;
+
+  //           expect(finishRowCount).to.greaterThan(10);
+  //         });
+  //     }
+  //   );
+  // });
 });

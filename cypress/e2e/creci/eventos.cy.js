@@ -349,14 +349,6 @@ describe("Teste HGTX CRECI - Eventos", () => {
       },
     }).as("getEventDetailsError");
 
-    cy.intercept("GET", "**/obter_arquivos/**", {
-      statusCode: 500,
-      body: {
-        errorCode: 500,
-        errorMessage: "Erro interno do servidor.",
-      },
-    }).as("getFilesError");
-
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
