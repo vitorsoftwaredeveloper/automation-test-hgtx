@@ -305,7 +305,9 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar informações gerais do evento clicando sobre o ícone na coluna Ver detalhes.", () => {
+  // ------------------ Geral ------------------
+
+  it.skip("deve ser capaz de visualizar informações da aba Geral clicando sobre o ícone na coluna Ver detalhes.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
@@ -340,7 +342,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao obter os detalhes dos eventos clicando sobre o ícone na coluna Ver detalhes.", () => {
+  it.skip("deve ser capaz de visualizar uma mensagem de erro ao tentar obter informações da aba Geral clicando sobre o ícone na coluna Ver detalhes.", () => {
     cy.intercept("GET", "**/obter_evento/**", {
       statusCode: 500,
       body: {
@@ -365,7 +367,9 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar informações de arquivos do evento clicando sobre o ícone na coluna Ver detalhes.", () => {
+  // ------------------ Arquivos ------------------
+
+  it.skip("deve ser capaz de visualizar informações da aba Arquivos do evento clicando sobre o ícone na coluna Ver detalhes.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
@@ -428,7 +432,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar detalhes dos eventos com informações de arquivos e realizar o download de vídeo.", () => {
+  it.skip("deve ser capaz de realizar o download de vídeo na aba Arquivos clicando sobre o ícone na coluna Ver detalhes > Arquivos > Download.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -447,6 +451,11 @@ describe("Teste HGTX CRECI - Eventos", () => {
       }
     ).as("listarEventos");
 
+    cy.intercept(
+      "POST",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoVideos/download_video"
+    ).as("downloadVideo");
+
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
@@ -461,7 +470,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
 
         cy.contains("button", "Filtrar").click();
 
-        cy.wait("@listarEventos");
+        cy.wait(2000);
 
         cy.get('[data-field="nome"]')
           .not(":first")
@@ -497,9 +506,19 @@ describe("Teste HGTX CRECI - Eventos", () => {
 
                     cy.contains("Download realizado com sucesso", {
                       timeout: 10000,
-                    })
-                      .should("be.visible")
-                      .click();
+                    }).should("be.visible");
+
+                    cy.wait("@downloadVideo").then((interception) => {
+                      expect(interception.response.statusCode).to.eq(200);
+
+                      expect(
+                        interception.response.headers["content-type"]
+                      ).to.include("video/mp4");
+
+                      expect(
+                        interception.response.headers["content-disposition"]
+                      ).to.include(".mp4");
+                    });
                   }
                 });
             }
@@ -508,7 +527,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar detalhes dos eventos com informações de arquivos e realizar o download de áudio.", () => {
+  it.skip("deve ser capaz de realizar o download de áudio na aba Arquivos clicando sobre o ícone na coluna Ver detalhes > Arquivos > Download", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -527,6 +546,11 @@ describe("Teste HGTX CRECI - Eventos", () => {
       }
     ).as("listarEventos");
 
+    cy.intercept(
+      "POST",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoAudios/download_audio"
+    ).as("downloadAudio");
+
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
@@ -541,7 +565,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
 
         cy.contains("button", "Filtrar").click();
 
-        cy.wait("@listarEventos");
+        cy.wait(2000);
 
         cy.get('[data-field="nome"]')
           .not(":first")
@@ -580,6 +604,18 @@ describe("Teste HGTX CRECI - Eventos", () => {
                     })
                       .should("be.visible")
                       .click();
+
+                    cy.wait("@downloadAudio").then((interception) => {
+                      expect(interception.response.statusCode).to.eq(200);
+
+                      expect(
+                        interception.response.headers["content-type"]
+                      ).to.include("audio/x-m4a");
+
+                      expect(
+                        interception.response.headers["content-disposition"]
+                      ).to.include(".mp3");
+                    });
                   }
                 });
             }

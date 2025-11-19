@@ -66,7 +66,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
         cy.contains("h2", "Paramêtros Gerais").should("be.visible");
         cy.contains("p", "Textos do Sistema").should("be.visible");
         cy.contains("p", "Imagens do Sistema").should("be.visible");
-        cy.contains("p", "Videos do Sistema").should("be.visible");
+        cy.contains("p", "Vídeos do Sistema").should("be.visible");
         cy.contains("button", "Cancelar Alterações")
           .should("be.visible")
           .should("not.be.enabled");
