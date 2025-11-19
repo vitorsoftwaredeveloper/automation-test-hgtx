@@ -459,7 +459,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
 
   // ------------------ Arquivos ------------------
 
-  it("deve ser capaz de visualizar informações da aba Arquivos do evento clicando sobre o ícone na coluna Ver detalhes.", () => {
+  it("deve ser capaz de visualizar informações da aba Arquivos do evento clicando sobre o ícone na coluna Ver detalhes com as colunas em devida ordem.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
