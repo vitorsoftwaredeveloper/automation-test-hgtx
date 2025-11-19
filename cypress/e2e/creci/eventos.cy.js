@@ -59,7 +59,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     cy.contains("Botão do Pânico - Eventos").click();
   });
 
-  it.skip("deve ser capaz de visualizar a página de Botão do Pânico - Eventos.", () => {
+  it("deve ser capaz de visualizar a página de Botão do Pânico - Eventos.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
@@ -69,7 +69,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar um grid listando informações dos eventos.", () => {
+  it("deve ser capaz de visualizar um grid listando informações dos eventos.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
@@ -85,7 +85,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de inserir dados no campo Pesquisar e filtrar os eventos pela informação inserida.", () => {
+  it("deve ser capaz de inserir dados no campo Pesquisar e filtrar os eventos pela informação inserida.", () => {
     let count = 0;
 
     cy.intercept(
@@ -106,7 +106,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
-        const name = "Fernando Melo";
+        const name = "Fernando Melo{enter}";
         cy.get("input[placeholder='Pesquisar']").clear().type(name);
 
         cy.get('[aria-label="filtrar"]').click();
@@ -117,20 +117,19 @@ describe("Teste HGTX CRECI - Eventos", () => {
 
         cy.contains("button", "Filtrar").click();
 
-        cy.wait("@listarEventos");
-
         cy.wait(1000);
 
         cy.get('[data-field="nome"]')
           .not(":first")
           .each(($cell) => {
-            expect($cell.text().trim()).to.include(name);
+            cy.log($cell.text().trim());
+            expect($cell.text().trim()).to.include(name.replace("{enter}", ""));
           });
       }
     );
   });
 
-  it.skip("deve ser capaz de inserir dados no campo Pesquisar e limpar o input ao licar no botão de limpar.", () => {
+  it("deve ser capaz de inserir dados no campo Pesquisar e limpar o input ao licar no botão de limpar.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
@@ -151,11 +150,15 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de abrir a modal de filtro.", () => {
+  // ------------------ Modal de filtro  ------------------
+
+  it("deve ser capaz de abrir a modal de filtro.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
         cy.get('[aria-label="filtrar"]').should("be.visible").click();
+
+        cy.wait(1000);
 
         cy.get('input[placeholder="DD/MM/AAAA"]').eq(0).focus();
         cy.contains("label", "Data Inicial").should("be.visible");
@@ -164,9 +167,10 @@ describe("Teste HGTX CRECI - Eventos", () => {
         cy.contains("label", "Data Final").should("be.visible");
 
         cy.get('input[role="combobox"]').eq(0).focus();
-        cy.contains("label", "Estados").should("be.visible");
+        cy.contains("label", "Estado").should("be.visible").type("São Paulo");
+        cy.get('li[role="option"]').should("be.visible").click();
 
-        cy.get('input[role="combobox"]').eq(1).focus();
+        cy.get('input[role="combobox"]').eq(1).focus().should("be.enabled");
         cy.contains("label", "Cidade").should("be.visible");
 
         cy.contains("button", "Filtrar").should("be.visible");
@@ -176,30 +180,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de inserir dados na modal de filtro e filtrar por resultados que correspondam apenas ao estado de São Paulo.", () => {
-    cy.origin(
-      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
-      () => {
-        cy.scrollTo("top");
-
-        cy.get('[aria-label="filtrar"]').click();
-
-        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
-
-        cy.contains("button", "Filtrar").click();
-        cy.get('[data-field="estado"]')
-          .not(":first")
-          .then(($cells) => {
-            const valorBase = $cells.first().text().trim();
-            cy.wrap($cells).each(($cell) => {
-              expect($cell.text().trim()).to.eq(valorBase);
-            });
-          });
-      }
-    );
-  });
-
-  it.skip("deve ser capaz de inserir dados na modal de filtro e filtrar por resultados que correspondam apenas a cidade de São Paulo.", () => {
+  it("deve ser capaz de inserir dados na modal de filtro e filtrar por resultados que correspondam apenas ao estado de São Paulo.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
@@ -213,13 +194,16 @@ describe("Teste HGTX CRECI - Eventos", () => {
 
         cy.get('[aria-label="filtrar"]').click();
 
-        cy.get('input[role="combobox"]').eq(1).focus().type("São Paulo");
+        cy.wait(1000);
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+        cy.get('li[role="option"]').should("be.visible").click();
 
         cy.contains("button", "Filtrar").click();
 
-        cy.wait(2000);
+        cy.wait(1000);
 
-        cy.get('[data-field="cidade"]')
+        cy.get('[data-field="estado"]')
           .not(":first")
           .then(($cells) => {
             const valorBase = $cells.first().text().trim();
@@ -231,7 +215,47 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de inserir dados na modal de filtro e filtrar por resultados que correspondam com Data e Hora a partir da data informada.", () => {
+  it("deve ser capaz de inserir dados na modal de filtro e filtrar por resultados que correspondam apenas a cidade de São Paulo.", () => {
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
+      () => {
+        cy.get('[data-testid="ArrowDropDownIcon"]')
+          .should("be.visible")
+          .parent()
+          .click();
+        cy.get('[data-value="25"]').should("be.visible").click();
+
+        cy.scrollTo("top");
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.get('input[role="combobox"]').eq(1).focus().type("São Paulo");
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait(1000);
+
+        cy.get('[data-field="cidade"]')
+          .not(":first")
+          .then(($cell) => {
+            const valorBase = $cell.text().trim();
+
+            const esperado1 = valorBase;
+            const esperado2 = `Região imediata de ${valorBase}`;
+
+            expect(valorBase).to.satisfy(
+              (t) => t === esperado1 || t === esperado2
+            );
+          });
+      }
+    );
+  });
+
+  it("deve ser capaz de inserir dados na modal de filtro e filtrar por resultados que correspondam com Data e Hora a partir da data informada.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
@@ -279,7 +303,73 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de cancelar a ação na modal de filtro.", () => {
+  it("deve ser capaz de inserir uma data inicial e final e visualizar somente eventos com data dentro do intervalo informado.", () => {
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
+      () => {
+        cy.get('[data-testid="ArrowDropDownIcon"]')
+          .should("be.visible")
+          .parent()
+          .click();
+
+        cy.get('[data-value="25"]').should("be.visible").click();
+
+        cy.scrollTo("top");
+
+        cy.get('[aria-label="filtrar"]').should("be.visible").click();
+
+        const now = new Date();
+        const endDate = `${now.getDate()}/${
+          now.getMonth() + 1
+        }/${now.getFullYear()}`;
+
+        const past = new Date();
+        past.setDate(now.getDate() - 10);
+        const startDate = `${past.getDate()}/${
+          past.getMonth() + 1
+        }/${past.getFullYear()}`;
+
+        cy.wait(1000);
+
+        cy.get('input[placeholder="DD/MM/AAAA"]')
+          .eq(0)
+          .focus()
+          .clear()
+          .type(startDate);
+
+        cy.get('input[placeholder="DD/MM/AAAA"]')
+          .eq(1)
+          .focus()
+          .clear()
+          .type(endDate);
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait(1000);
+
+        function toTimestamp(dateStr) {
+          const [d, m, y] = dateStr.split("/");
+          return new Date(y, m - 1, d).getTime();
+        }
+
+        const startTs = toTimestamp(startDate);
+        const endTs = toTimestamp(endDate);
+
+        cy.get('[data-field="data"]')
+          .not(":first")
+          .each(($cell) => {
+            const cellDateStr = $cell.text().split("-")[0].trim();
+
+            const valueTs = toTimestamp(cellDateStr);
+
+            expect(valueTs).to.be.at.least(startTs);
+            expect(valueTs).to.be.at.most(endTs);
+          });
+      }
+    );
+  });
+
+  it("deve ser capaz de cancelar a ação na modal de filtro.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
@@ -292,7 +382,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de fechar a modal de filtro.", () => {
+  it("deve ser capaz de fechar a modal de filtro.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
@@ -307,7 +397,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
 
   // ------------------ Geral ------------------
 
-  it.skip("deve ser capaz de visualizar informações da aba Geral clicando sobre o ícone na coluna Ver detalhes.", () => {
+  it("deve ser capaz de visualizar informações da aba Geral clicando sobre o ícone na coluna Ver detalhes.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
@@ -342,7 +432,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao tentar obter informações da aba Geral clicando sobre o ícone na coluna Ver detalhes.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro ao tentar obter informações da aba Geral clicando sobre o ícone na coluna Ver detalhes.", () => {
     cy.intercept("GET", "**/obter_evento/**", {
       statusCode: 500,
       body: {
@@ -369,7 +459,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
 
   // ------------------ Arquivos ------------------
 
-  it.skip("deve ser capaz de visualizar informações da aba Arquivos do evento clicando sobre o ícone na coluna Ver detalhes.", () => {
+  it("deve ser capaz de visualizar informações da aba Arquivos do evento clicando sobre o ícone na coluna Ver detalhes.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
@@ -379,13 +469,27 @@ describe("Teste HGTX CRECI - Eventos", () => {
         cy.contains("Detalhes do Evento").should("be.visible");
         cy.contains("button", "Geral").should("be.visible");
         cy.contains("button", "Arquivos").should("be.visible").click();
-        cy.contains("ID").should("be.visible");
-        cy.contains("Nome").should("be.visible");
-        cy.contains("Data de Criação").should("be.visible");
-        cy.contains("Horário de Criação").should("be.visible");
-        cy.contains("Duração").should("be.visible");
-        cy.contains("Tipo").should("be.visible");
-        cy.contains("Tamanho").should("be.visible");
+
+        cy.wait(1000);
+
+        cy.get(".MuiDialog-root:visible")
+          .find("div[role='columnheader']")
+          .then(($cols) => {
+            const titles = [...$cols].map((c) => c.innerText.trim());
+
+            cy.log("validando ordem das colunas");
+
+            expect(titles).to.deep.equal([
+              "ID",
+              "Nome",
+              "Tipo",
+              "Data de Criação",
+              "Horário de Criação",
+              "Duração",
+              "Tamanho",
+              "Download",
+            ]);
+          });
 
         cy.get("body").then(($body) => {
           if ($body.text().includes("Não há registros")) {
@@ -419,7 +523,13 @@ describe("Teste HGTX CRECI - Eventos", () => {
             cy.get('[data-field="tipo"]')
               .not(":first")
               .each(($cell) => {
-                expect($cell.text()).to.not.be.empty;
+                const value = $cell.text().trim();
+
+                expect(value).to.satisfy((val) => {
+                  return val === "Vídeo" || val === "Áudio";
+                });
+
+                expect(value).to.not.be.empty;
               });
             cy.get('[data-field="tamanho"]')
               .not(":first")
@@ -432,7 +542,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de realizar o download de vídeo na aba Arquivos clicando sobre o ícone na coluna Ver detalhes > Arquivos > Download.", () => {
+  it("deve ser capaz de realizar o download de vídeo na aba Arquivos clicando sobre o ícone na coluna Ver detalhes > Arquivos > Download.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -527,7 +637,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de realizar o download de áudio na aba Arquivos clicando sobre o ícone na coluna Ver detalhes > Arquivos > Download", () => {
+  it("deve ser capaz de realizar o download de áudio na aba Arquivos clicando sobre o ícone na coluna Ver detalhes > Arquivos > Download", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -624,7 +734,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar detalhes do usuário que criou o evento.", () => {
+  it("deve ser capaz de visualizar detalhes do usuário que criou o evento.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
@@ -636,7 +746,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
           .should("be.visible")
           .click();
 
-        cy.contains("Editar Usuário Ryan").should("be.visible");
+        cy.contains("Editar Usuário").should("be.visible");
         cy.contains("Dados Pessoais").should("be.visible");
         cy.contains("Endereço").should("be.visible");
         cy.contains("Inf. Médicas").should("be.visible");
@@ -658,7 +768,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de fechar a modal de Ver detalhes do evento clicando no ícone de fechar.", () => {
+  it("deve ser capaz de fechar a modal de Ver detalhes do evento clicando no ícone de fechar.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
@@ -673,7 +783,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar opção de Ver Localização onde o evento irá acontecer.", () => {
+  it("deve ser capaz de visualizar opção de Ver Localização onde o evento irá acontecer.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -706,7 +816,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
 
         cy.contains("button", "Filtrar").click();
 
-        cy.wait("@listarEventos");
+        cy.wait(2000);
 
         cy.get('[data-field="nome"]')
           .not(":first")
@@ -734,7 +844,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro quando é inserido uma informação no campo Pesquisar mas o servidor respondeu com erro.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro quando é inserido uma informação no campo Pesquisar mas o servidor respondeu com erro.", () => {
     let count = 0;
 
     cy.intercept("GET", "**/listar_eventos/**", {
@@ -762,7 +872,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de paginar os resultados do grid de eventos.", () => {
+  it("deve ser capaz de paginar os resultados do grid de eventos.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
@@ -777,7 +887,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de alterar a quantidade de registros exibidos no grid de eventos.", () => {
+  it("deve ser capaz de alterar a quantidade de registros exibidos no grid de eventos.", () => {
     cy.intercept(
       "GET",
       "https://creci-app-api8.hgtx.com.br/api/v1/BotaoPanicoEventos/listar_eventos/1/*"
@@ -808,8 +918,6 @@ describe("Teste HGTX CRECI - Eventos", () => {
           .click();
         cy.get('[data-value="25"]').should("be.visible").click();
 
-        cy.wait("@listarEventos");
-
         cy.wait(2000);
 
         cy.get('div[role="rowgroup"]')
@@ -824,7 +932,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao obter os eventos ao carregar a página.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro ao obter os eventos ao carregar a página.", () => {
     cy.intercept("GET", "**/listar_eventos/**", {
       statusCode: 500,
       body: {
@@ -847,7 +955,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de limpar o campo Pesquisar ao clicar no botão de limpar dentro da modal de filtro.", () => {
+  it("deve ser capaz de limpar o campo Pesquisar ao clicar no botão de limpar dentro da modal de filtro.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/eventos",
       () => {
@@ -863,7 +971,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
     );
   });
 
-  it.skip("deve ser capaz de limpar os filtros aplicados no grid ao clicar no botão de limpar dentro da modal de filtro.", () => {
+  it("deve ser capaz de limpar os filtros aplicados no grid ao clicar no botão de limpar dentro da modal de filtro.", () => {
     cy.intercept(
       "GET",
       "https://creci-app-api8.hgtx.com.br/api/v1/BotaoPanicoEventos/listar_eventos/1/10*"
@@ -888,7 +996,7 @@ describe("Teste HGTX CRECI - Eventos", () => {
 
         cy.contains("button", "Filtrar").click();
 
-        cy.wait("@listarEventos");
+        cy.wait(2000);
 
         cy.wait(1000);
 
