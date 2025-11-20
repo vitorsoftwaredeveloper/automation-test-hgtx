@@ -59,7 +59,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     cy.contains("Botão do Pânico - Usuários").click();
   });
 
-  it.skip("deve ser capaz de visualizar a página de Botão do Pânico - Usuários.", () => {
+  it("deve ser capaz de visualizar a página de Botão do Pânico - Usuários.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
       () => {
@@ -69,7 +69,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar um grid listando informações dos usuários.", () => {
+  it("deve ser capaz de visualizar um grid listando informações dos usuários.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
       () => {
@@ -80,11 +80,27 @@ describe("Teste HGTX CRECI - Usuários", () => {
         cy.contains("Estado").should("be.visible");
         cy.contains("Cidade").should("be.visible");
         cy.contains("Ações").should("be.visible");
+
+        cy.log("Verificando a ordem das colunas");
+        cy.get("div[role='rowgroup']")
+          .should("be.visible")
+          .find("div[role='columnheader']")
+          .then(($cols) => {
+            const titles = [...$cols].map((c) => c.innerText.trim());
+
+            expect(titles).to.deep.equal([
+              "ID",
+              "Nome",
+              "Estado",
+              "Cidade",
+              "Ações",
+            ]);
+          });
       }
     );
   });
 
-  it.skip("deve ser capaz de paginar a lista de usuários.", () => {
+  it("deve ser capaz de paginar a lista de usuários.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -104,7 +120,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de paginar os resultados do grid (rows per page) de usuários.", () => {
+  it("deve ser capaz de paginar os resultados do grid (rows per page) de usuários.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -136,7 +152,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
 
   // ------------------ Input de pesquisa ------------------
 
-  it.skip("deve ser capaz de inserir dados no campo Pesquisar e filtrar os usuários pela informação inserida.", () => {
+  it("deve ser capaz de inserir dados no campo Pesquisar e filtrar os usuários pela informação inserida.", () => {
     let count = 0;
 
     cy.intercept(
@@ -157,7 +173,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
       () => {
-        const name = "Fernando Melo";
+        const name = "Fernando Melo{enter}";
         cy.get("input[placeholder='Pesquisar']").clear().type(name);
 
         cy.get('[aria-label="filtrar"]').click();
@@ -168,18 +184,18 @@ describe("Teste HGTX CRECI - Usuários", () => {
 
         cy.contains("button", "Filtrar").click();
 
-        cy.wait(3000);
+        cy.wait(1000);
 
         cy.get('[data-field="nome"]')
           .not(":first")
           .each(($cell) => {
-            expect($cell.text().trim()).to.include(name);
+            expect($cell.text().trim()).to.include(name.replace("{enter}", ""));
           });
       }
     );
   });
 
-  it.skip("deve ser capaz de inserir dados no campo Pesquisar e limpar o input ao clicar no botão de limpar.", () => {
+  it("deve ser capaz de inserir dados no campo Pesquisar e limpar o input ao clicar no botão de limpar.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
       () => {
@@ -202,14 +218,14 @@ describe("Teste HGTX CRECI - Usuários", () => {
 
   // ------------------ Modal de Filtro ------------------
 
-  it.skip("deve ser capaz de abrir a modal de filtro.", () => {
+  it("deve ser capaz de abrir a modal de filtro.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
       () => {
         cy.get('[aria-label="filtrar"]').should("be.visible").click();
 
         cy.get('input[role="combobox"]').eq(0).focus();
-        cy.contains("label", "Estados").should("be.visible").type("Paraíba");
+        cy.contains("label", "Estado").should("be.visible").type("Paraíba");
         cy.get('li[role="option"]').should("be.visible").click();
 
         cy.get('input[role="combobox"]').eq(1).focus();
@@ -222,7 +238,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de inserir dados na modal de filtro e filtrar por resultados que correspondam apenas ao estado de São Paulo.", () => {
+  it("deve ser capaz de inserir dados na modal de filtro e filtrar por resultados que correspondam apenas ao estado de São Paulo.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
       () => {
@@ -241,7 +257,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
 
         cy.contains("button", "Filtrar").click();
 
-        cy.wait(2000);
+        cy.wait(1000);
 
         cy.get('[data-field="estado"]')
           .not(":first")
@@ -255,7 +271,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de inserir dados na modal de filtro e filtrar por resultados que correspondam apenas a cidade de Adamantina.", () => {
+  it("deve ser capaz de inserir dados na modal de filtro e filtrar por resultados que correspondam apenas a cidade de Adamantina.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
       () => {
@@ -277,7 +293,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
 
         cy.contains("button", "Filtrar").click();
 
-        cy.wait(2000);
+        cy.wait(1000);
 
         cy.log("Verificando se todos os estados são São Paulo");
         cy.get('[data-field="estado"]')
@@ -302,7 +318,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de cancelar a ação na modal de filtro.", () => {
+  it("deve ser capaz de cancelar a ação na modal de filtro.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
       () => {
@@ -315,7 +331,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de fechar a modal de filtro.", () => {
+  it("deve ser capaz de fechar a modal de filtro.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
       () => {
@@ -330,7 +346,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
 
   // ------------------ Dados Pessoais ------------------
 
-  it.skip("deve ser capaz de visualizar e editar Dados pessoais do usuário clicando sobre o ícone na coluna Ações > Editar e depois salvar as alterações.", () => {
+  it("deve ser capaz de visualizar e editar Dados pessoais do usuário clicando sobre o ícone na coluna Ações > Editar e depois salvar as alterações.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -370,6 +386,23 @@ describe("Teste HGTX CRECI - Usuários", () => {
         cy.get('[role="menuitem"]').should("be.visible").first().click();
         cy.contains("Editar").should("be.visible").click();
         cy.wait(1000);
+
+        cy.log("Verificando a ordem das tabs");
+        cy.get('div[role="tablist"] button[role="tab"]').then(($tabs) => {
+          const textos = [...$tabs].map((t) => t.innerText.trim());
+
+          const ordemEsperada = [
+            "Dados Pessoais",
+            "Endereço",
+            "Inf. Médicas",
+            "Cont. de Emergência",
+            "Gravações",
+            "Vídeos",
+          ];
+
+          expect(textos).to.deep.equal(ordemEsperada);
+        });
+        cy.contains("button", "Salvar").should("be.visible").click();
 
         cy.log("Guardando dados do usuário para edição");
         let nome, cpf, rg, ddd, telefone, email;
@@ -416,14 +449,13 @@ describe("Teste HGTX CRECI - Usuários", () => {
 
           cy.contains("button", "Salvar").should("be.visible").click();
           cy.contains("Dados salvos com sucesso").should("be.visible");
-          cy.log("Fechando a modal de edição");
-          cy.get("body").type("{esc}");
+          cy.contains("Editar Usuário").should("not.be.visible").click();
         });
       }
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro na obtenção de Dados pessoais do usuário clicando sobre o ícone na coluna Ações > Editar.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro na obtenção de Dados pessoais do usuário clicando sobre o ícone na coluna Ações > Editar.", () => {
     let count = 0;
 
     cy.intercept(
@@ -471,7 +503,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro quando tentar atualizar dados de usuário clicando sobre o botão Salvar.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro quando tentar atualizar dados de usuário clicando sobre o botão Salvar.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -523,7 +555,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar mensagem de campo obrigatório ao editar Dados pessoais de usuário quando se tenta salvar sem os campos estarem preenchidos", () => {
+  it("deve ser capaz de visualizar mensagem de campo obrigatório ao editar Dados pessoais de usuário quando se tenta salvar sem os campos estarem preenchidos", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -578,7 +610,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de inserir dois números no input de DDD na modal de edição > Dados Pessoais.", () => {
+  it("deve ser capaz de inserir dois números no input de DDD na modal de edição > Dados Pessoais.", () => {
     cy.viewport(1920, 1080);
 
     cy.origin(
@@ -611,7 +643,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar no input de Telefone o formato brasileiro de telefones xxxxx-xxxx e não permitir salvar nem mais e nem menos que 9 números", () => {
+  it("deve ser capaz de visualizar no input de Telefone o formato brasileiro de telefones xxxxx-xxxx e não permitir salvar nem mais e nem menos que 9 números", () => {
     cy.viewport(1920, 1080);
 
     cy.origin(
@@ -645,7 +677,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
 
   // ------------------ Endereço ------------------
 
-  it.skip("deve ser capaz de visualizar e editar Endereço do usuário clicando sobre o ícone na coluna Ações > Editar > Endereço e depois salvar as alterações.", () => {
+  it("deve ser capaz de visualizar e editar Endereço do usuário clicando sobre o ícone na coluna Ações > Editar > Endereço e depois salvar as alterações.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -791,7 +823,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de a requisição retornar sucesso ao buscar um cep existente no Ações > Editar > Endereço.", () => {
+  it("deve ser capaz de a requisição retornar sucesso ao buscar um cep existente no Ações > Editar > Endereço.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -845,7 +877,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao buscar um cep não existente no Ações > Editar > Endereço.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro ao buscar um cep não existente no Ações > Editar > Endereço.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -887,7 +919,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
         cy.contains("Endereço").should("be.visible").click();
         cy.wait(1000);
 
-        cy.get('input[name="cep"]').clear().type("00000000");
+        cy.get('input[name="cep"]').clear().type("58071111");
         cy.contains("button", "Buscar").should("be.visible").click();
 
         cy.contains("CEP não encontrado").should("be.visible");
@@ -897,7 +929,59 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro na obtenção de Endereço do usuário clicando sobre o ícone na coluna Ações > Editar > Endereço.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro ao buscar um cep inválido no Ações > Editar > Endereço.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Endereço").should("be.visible").click();
+        cy.wait(1000);
+
+        cy.get('input[name="cep"]').clear().type("123456789");
+        cy.contains("button", "Buscar").should("be.visible").click();
+
+        cy.contains("CEP inválido").should("be.visible");
+        cy.log("Fechando a modal de edição");
+        cy.get("body").type("{esc}");
+      }
+    );
+  });
+
+  it("deve ser capaz de visualizar uma mensagem de erro na obtenção de Endereço do usuário clicando sobre o ícone na coluna Ações > Editar > Endereço.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -950,7 +1034,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro quando tentar atualizar Endereço do usuário clicando sobre o botão Salvar.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro quando tentar atualizar Endereço do usuário clicando sobre o botão Salvar.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -1003,7 +1087,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar mensagem de campo obrigatório ao editar Endereço de usuário quando se tenta salvar sem os campos estarem preenchidos, exceto o campo complemento", () => {
+  it("deve ser capaz de visualizar mensagem de campo obrigatório ao editar Endereço de usuário quando se tenta salvar sem os campos estarem preenchidos, exceto o campo complemento", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -1060,7 +1144,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
 
   // ------------------ Informações médicas ------------------
 
-  it.skip("deve ser capaz de visualizar e editar Informações médicas do usuário clicando sobre o ícone na coluna Ações > Editar > Inf. Médicas e depois salvar as alterações.", () => {
+  it("deve ser capaz de visualizar e editar Informações médicas do usuário clicando sobre o ícone na coluna Ações > Editar > Inf. Médicas e depois salvar as alterações.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -1197,7 +1281,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro na obtenção de Informações médicas do usuário clicando sobre o ícone na coluna Ações > Editar > Inf. Médicas.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro na obtenção de Informações médicas do usuário clicando sobre o ícone na coluna Ações > Editar > Inf. Médicas.", () => {
     let count = 0;
 
     cy.intercept(
@@ -1246,7 +1330,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro quando tentar atualizar dados de Informações médicas clicando sobre o botão Salvar.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro quando tentar atualizar dados de Informações médicas clicando sobre o botão Salvar.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -1301,7 +1385,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
 
   // ------------------ Contatos de emergência ------------------
 
-  it.skip("deve ser capaz de visualizar Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência.", () => {
+  it("deve ser capaz de visualizar Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -1346,13 +1430,42 @@ describe("Teste HGTX CRECI - Usuários", () => {
         cy.contains("Qnt. de Contatos Cadastrados").should("be.visible");
         cy.contains("Novo Contato").should("be.visible");
 
+        cy.get('[data-testid="ArrowDropDownIcon"]')
+          .should("be.visible")
+          .parent()
+          .eq(1)
+          .click();
+
+        cy.get('[data-value="25"]').should("be.visible").click();
+
+        cy.get(".MuiDialog-root:visible")
+          .contains("Rows per page")
+          .should("be.visible");
+
+        cy.log("Verificando a ordem das colunas");
+        cy.get(".MuiDialog-root:visible")
+          .find("div[role='columnheader']")
+          .then(($cols) => {
+            const titles = [...$cols].map((c) => c.innerText.trim());
+
+            cy.log("validando ordem das colunas");
+
+            expect(titles).to.deep.equal([
+              "ID do Evento",
+              "Nome",
+              "Número",
+              "Tipo",
+              "Ações",
+            ]);
+          });
+
         cy.log("Fechando a modal");
         cy.get("body").type("{esc}");
       }
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma modal para cadastro de novos contatos na aba Cont. Emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência > Novo Contato.", () => {
+  it("deve ser capaz de visualizar uma modal para cadastro de novos contatos na aba Cont. Emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência > Novo Contato.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -1408,9 +1521,9 @@ describe("Teste HGTX CRECI - Usuários", () => {
         cy.contains("label", "Email").should("be.visible");
 
         cy.contains("Tipo de Contato").should("be.visible");
-        cy.contains("Familiares").should("be.visible");
-        cy.contains("Pessoas próximas").should("be.visible");
-        cy.contains("Colegas de trabalho").should("be.visible");
+        cy.contains("span", "Familiares").should("be.visible");
+        cy.contains("span", "Pessoas Próximas").should("be.visible");
+        cy.contains("span", "Colegas de Trabalho").should("be.visible");
         cy.contains(
           "Envio de notificação (Após o acionamento do botão do pânico)"
         ).should("be.visible");
@@ -1421,7 +1534,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de fechar a modal para cadastrar novos contatos na aba Cont. Emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência > Novo Contato > Cancelar.", () => {
+  it("deve ser capaz de fechar a modal para cadastrar novos contatos na aba Cont. Emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência > Novo Contato > Cancelar.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -1470,7 +1583,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de cadastrar novos contatos na aba Cont. Emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência > Novo Contato > Salvar.", () => {
+  it("deve ser capaz de cadastrar novos contatos na aba Cont. Emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência > Novo Contato > Salvar.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -1530,7 +1643,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de 'Campo obrigatório' aba Cont. Emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência > Novo Contato > Salvar.", () => {
+  it("deve ser capaz de visualizar uma mensagem de 'Campo obrigatório' aba Cont. Emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência > Novo Contato > Salvar.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -1590,7 +1703,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de campo de e-mail inválido ao preencher com e-mail inválido.", () => {
+  it("deve ser capaz de visualizar uma mensagem de campo de e-mail inválido ao preencher com e-mail inválido.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -1642,7 +1755,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao tentar cadastrar um novo contato na aba Cont. Emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência > Novo Contato > Salvar.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro ao tentar cadastrar um novo contato na aba Cont. Emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência > Novo Contato > Salvar.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -1706,7 +1819,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro na obtenção de Cont. Emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro na obtenção de Cont. Emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência.", () => {
     let count = 0;
 
     cy.intercept(
@@ -1755,7 +1868,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência. e editar as informações de um contato.", () => {
+  it("deve ser capaz de visualizar Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência. e editar as informações de um contato.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -1843,7 +1956,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro na aba Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência. > Editar, pois o servidor retornou um erro.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro na aba Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência. > Editar, pois o servidor retornou um erro.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -1901,7 +2014,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência. e editar as informações de um contato, mas cancelar a operação de edição.", () => {
+  it("deve ser capaz de visualizar Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência. e editar as informações de um contato, mas cancelar a operação de edição.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -1957,7 +2070,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma modal para remover um contato na aba de Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência, clicando no botão de Excluir na coluna Ações.", () => {
+  it("deve ser capaz de visualizar uma modal para remover um contato na aba de Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência, clicando no botão de Excluir na coluna Ações.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -2032,7 +2145,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao tentar excluir um contato na aba de Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência, clicando no botão de Excluir na coluna Ações.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro ao tentar excluir um contato na aba de Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência, clicando no botão de Excluir na coluna Ações.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -2111,7 +2224,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de cancelar a remoção de um contato na aba de Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência, clicando no botão de Excluir na coluna Ações.", () => {
+  it("deve ser capaz de cancelar a remoção de um contato na aba de Contatos de emergência clicando sobre o ícone na coluna Ações > Editar > Cont. Emergência, clicando no botão de Excluir na coluna Ações.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -2192,7 +2305,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de paginar os Contatos de emergência do grid de contatos.", () => {
+  it("deve ser capaz de paginar os Contatos de emergência do grid de contatos.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -2246,7 +2359,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de paginar os resultados do grid de Contatos de emergência.", () => {
+  it("deve ser capaz de paginar os resultados do grid de Contatos de emergência.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -2319,7 +2432,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
 
   // ------------------ Gravações ------------------
 
-  it.skip("deve ser capaz de visualizar Gravações clicando sobre o ícone na coluna Ações > Editar > Gravações.", () => {
+  it("deve ser capaz de visualizar Gravações clicando sobre o ícone na coluna Ações > Editar > Gravações.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -2359,21 +2472,31 @@ describe("Teste HGTX CRECI - Usuários", () => {
         cy.get('[role="menuitem"]').should("be.visible").first().click();
         cy.contains("Editar").should("be.visible").click();
         cy.contains("Gravações").should("be.visible").click();
-        cy.wait(2000);
+        cy.wait(1000);
 
-        cy.get('[data-field="idEvento"]').should("be.exist");
-        cy.get('[data-field="idAudios"]').should("be.exist");
-        cy.get('[data-field="nome"]').should("be.exist");
-        cy.get('[data-field="dataCriacao_date"]').should("be.exist");
-        cy.get('[data-field="dataCriacao_time"]').should("be.exist");
-        cy.get('[data-field="duracao"]').should("be.exist");
-        cy.get('[data-field="tamanho"]').should("be.exist");
-        cy.get('[data-field="actions"]').should("be.exist");
+        cy.log("validando ordem das colunas");
+        cy.get(".MuiDialog-root:visible")
+          .find("div[role='columnheader']")
+          .then(($cols) => {
+            const titles = [...$cols].map((c) => c.innerText.trim());
+
+            expect(titles).to.deep.equal([
+              "ID do Evento",
+              "Nome",
+              "Data de Criação",
+              "Horário de Criação",
+              "Duração",
+              "Tamanho",
+              "Ações",
+            ]);
+          });
+
+        cy.contains("Rows per page").should("be.visible");
       }
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao tentar carregar as Gravações clicando sobre o ícone na coluna Ações > Editar > Gravações.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro ao tentar carregar as Gravações clicando sobre o ícone na coluna Ações > Editar > Gravações.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -2424,7 +2547,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar opções de ações sobre alguma gravação clicando sobre o ícone na coluna Ações > Editar > Gravações > Ações.", () => {
+  it("deve ser capaz de visualizar opções de ações sobre alguma gravação clicando sobre o ícone na coluna Ações > Editar > Gravações > Ações.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -2481,7 +2604,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de renomear uma gravação clicando sobre o ícone na coluna Ações > Editar > Gravações > Ações > Renomear > Salvar.", () => {
+  it("deve ser capaz de renomear uma gravação clicando sobre o ícone na coluna Ações > Editar > Gravações > Ações > Renomear > Salvar.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -2557,7 +2680,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de campo obrigatório quando se tenta renomear uma gravação clicando sobre o ícone na coluna Ações > Editar > Gravações > Ações > Renomear > Salvar e não preencheu o campo adequadamente.", () => {
+  it("deve ser capaz de visualizar uma mensagem de campo obrigatório quando se tenta renomear uma gravação clicando sobre o ícone na coluna Ações > Editar > Gravações > Ações > Renomear > Salvar e não preencheu o campo adequadamente.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -2633,7 +2756,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao tentar renomear uma gravação clicando sobre o ícone na coluna Ações > Editar > Gravações > Ações > Renomear > Salvar.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro ao tentar renomear uma gravação clicando sobre o ícone na coluna Ações > Editar > Gravações > Ações > Renomear > Salvar.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -2713,7 +2836,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de cancelar a operação de renomear uma gravação clicando sobre o ícone na coluna Ações > Editar > Gravações > Ações > Renomear > Cancelar.", () => {
+  it("deve ser capaz de cancelar a operação de renomear uma gravação clicando sobre o ícone na coluna Ações > Editar > Gravações > Ações > Renomear > Cancelar.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -2770,7 +2893,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de realizar o download de uma gravação clicando sobre o ícone na coluna Ações > Editar > Gravações > Ações > Download no formato .mp3.", () => {
+  it("deve ser capaz de realizar o download de uma gravação clicando sobre o ícone na coluna Ações > Editar > Gravações > Ações > Download no formato .mp3.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -2843,7 +2966,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao tentar realizar o download de uma gravação clicando sobre o ícone na coluna Ações > Editar > Gravações > Ações > Download.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro ao tentar realizar o download de uma gravação clicando sobre o ícone na coluna Ações > Editar > Gravações > Ações > Download.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -2902,7 +3025,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
   });
 
   // comentando esse teste até que cadastre um usuário que possua mais de uma gravação
-  // it.skip("deve ser capaz de excluir uma gravação clicando sobre o ícone na coluna Ações > Editar > Gravações > Ações > Excluir > Confirmar.", () => {
+  // it("deve ser capaz de excluir uma gravação clicando sobre o ícone na coluna Ações > Editar > Gravações > Ações > Excluir > Confirmar.", () => {
   //   let count = 0;
   //   cy.viewport(1920, 1080);
 
@@ -2965,7 +3088,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
   //     }
   //   );
   // });
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao tentar excluir uma gravação clicando sobre o ícone na coluna Ações > Editar > Gravações > Ações > Excluir > Confirmar.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro ao tentar excluir uma gravação clicando sobre o ícone na coluna Ações > Editar > Gravações > Ações > Excluir > Confirmar.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -3030,9 +3153,130 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
+  it("deve ser capaz de paginar as Gravações do grid.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.intercept("DELETE", "**/excluir/**", {
+      statusCode: 500,
+    }).as("deleteEmergencyContactError");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Gravações").should("be.visible").click();
+
+        cy.wait(1000);
+
+        cy.get('[data-testid="ArrowDropDownIcon"]')
+          .should("be.visible")
+          .parent()
+          .eq(1)
+          .click();
+
+        cy.get('button[aria-label="Go to next page"]').should("be.visible");
+
+        cy.get('button[aria-label="Go to previous page"]').should("be.visible");
+      }
+    );
+  });
+
+  it("deve ser capaz de paginar os resultados do grid de Gravações.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Gravações").should("be.visible").click();
+
+        cy.wait(1000);
+
+        cy.get('[data-value="25"]').should("be.visible").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('div[role="rowgroup"]')
+          .not(":first")
+          .children()
+          .then(($rows) => {
+            const finishRowCount = $rows.length;
+
+            expect(finishRowCount).to.greaterThan(10);
+          });
+      }
+    );
+  });
+
   // ------------------ Vídeos ------------------
 
-  it.skip("deve ser capaz de visualizar Vídeos clicando sobre o ícone na coluna Ações > Editar > Vídeos.", () => {
+  it("deve ser capaz de visualizar Vídeos clicando sobre o ícone na coluna Ações > Editar > Vídeos.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -3074,19 +3318,27 @@ describe("Teste HGTX CRECI - Usuários", () => {
         cy.contains("Videos").should("be.visible").click();
         cy.wait(2000);
 
-        cy.get('[data-field="idEvento"]').should("be.exist");
-        cy.get('[data-field="idVideos"]').should("be.exist");
-        cy.get('[data-field="nome"]').should("be.exist");
-        cy.get('[data-field="dataCriacao_date"]').should("be.exist");
-        cy.get('[data-field="dataCriacao_time"]').should("be.exist");
-        cy.get('[data-field="duracao"]').should("be.exist");
-        cy.get('[data-field="tamanho"]').should("be.exist");
-        cy.get('[data-field="actions"]').should("be.exist");
+        cy.log("Verificando a ordem das colunas");
+        cy.get(".MuiDialog-root:visible")
+          .find("div[role='columnheader']")
+          .then(($cols) => {
+            const titles = [...$cols].map((c) => c.innerText.trim());
+
+            expect(titles).to.deep.equal([
+              "ID do Evento",
+              "Nome",
+              "Data de Criação",
+              "Horário de Criação",
+              "Duração",
+              "Tamanho",
+              "Ações",
+            ]);
+          });
       }
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao tentar carregar as Vídeos clicando sobre o ícone na coluna Ações > Editar > Vídeos.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro ao tentar carregar as Vídeos clicando sobre o ícone na coluna Ações > Editar > Vídeos.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -3137,7 +3389,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de renomear uma vídeo clicando sobre o ícone na coluna Ações > Editar > Videos > Ações > Renomear > Salvar.", () => {
+  it("deve ser capaz de renomear uma vídeo clicando sobre o ícone na coluna Ações > Editar > Videos > Ações > Renomear > Salvar.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -3215,7 +3467,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de campo obrigatório ao tentar renomear uma vídeo clicando sobre o ícone na coluna Ações > Editar > Videos > Ações > Renomear > Salvar e não preencheu o campo adequadamente.", () => {
+  it("deve ser capaz de visualizar uma mensagem de campo obrigatório ao tentar renomear uma vídeo clicando sobre o ícone na coluna Ações > Editar > Videos > Ações > Renomear > Salvar e não preencheu o campo adequadamente.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -3291,7 +3543,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao tentar renomear uma vídeo clicando sobre o ícone na coluna Ações > Editar > Videos > Ações > Renomear > Salvar.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro ao tentar renomear uma vídeo clicando sobre o ícone na coluna Ações > Editar > Videos > Ações > Renomear > Salvar.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -3370,7 +3622,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de cancelar a operação de renomear uma vídeo clicando sobre o ícone na coluna Ações > Editar > Videos > Ações > Renomear > Cancelar.", () => {
+  it("deve ser capaz de cancelar a operação de renomear uma vídeo clicando sobre o ícone na coluna Ações > Editar > Videos > Ações > Renomear > Cancelar.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -3427,7 +3679,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de realizar o download de uma vídeo clicando sobre o ícone na coluna Ações > Editar > Videos > Ações > Download no formato .mp4.", () => {
+  it("deve ser capaz de realizar o download de uma vídeo clicando sobre o ícone na coluna Ações > Editar > Videos > Ações > Download no formato .mp4.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -3498,7 +3750,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao tentar realizar o download de uma vídeo clicando sobre o ícone na coluna Ações > Editar > Videos > Ações > Download.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro ao tentar realizar o download de uma vídeo clicando sobre o ícone na coluna Ações > Editar > Videos > Ações > Download.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -3557,7 +3809,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
   });
 
   // comentando esse teste até que cadastre um usuário que possua mais de um vídeo
-  // it.skip("deve ser capaz de excluir uma vídeo clicando sobre o ícone na coluna Ações > Editar > Videos > Ações > Excluir > Confirmar.", () => {
+  // it("deve ser capaz de excluir uma vídeo clicando sobre o ícone na coluna Ações > Editar > Videos > Ações > Excluir > Confirmar.", () => {
   //   let count = 0;
   //   cy.viewport(1920, 1080);
 
@@ -3621,7 +3873,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
   //   );
   // });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao tentar excluir uma vídeo clicando sobre o ícone na coluna Ações > Editar > Videos > Ações > Excluir > Confirmar.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro ao tentar excluir uma vídeo clicando sobre o ícone na coluna Ações > Editar > Videos > Ações > Excluir > Confirmar.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -3686,11 +3938,132 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
+  it("deve ser capaz de paginar as Vídeos do grid.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.intercept("DELETE", "**/excluir/**", {
+      statusCode: 500,
+    }).as("deleteEmergencyContactError");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Vídeos").should("be.visible").click();
+
+        cy.wait(1000);
+
+        cy.get('[data-testid="ArrowDropDownIcon"]')
+          .should("be.visible")
+          .parent()
+          .eq(1)
+          .click();
+
+        cy.get('button[aria-label="Go to next page"]').should("be.visible");
+
+        cy.get('button[aria-label="Go to previous page"]').should("be.visible");
+      }
+    );
+  });
+
+  it("deve ser capaz de paginar os resultados do grid de Vídeos.", () => {
+    let count = 0;
+    cy.viewport(1920, 1080);
+
+    cy.intercept(
+      "GET",
+      "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10*",
+      (req) => {
+        count++;
+
+        if (count === 2) {
+          const novaUrl =
+            "https://creci-v8-api.goutron.com.br/api/v1/BotaoPanicoDadosPessoais/listar_cadastros/1/10?nome=Fernando+Melo";
+          req.url = novaUrl;
+        }
+        req.continue();
+      }
+    ).as("listarEventos");
+
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        const name = "Fernando Melo";
+        cy.get("input[placeholder='Pesquisar']").clear().type(name);
+
+        cy.get('[aria-label="filtrar"]').click();
+
+        cy.get('input[role="combobox"]').eq(0).focus().type("São Paulo");
+
+        cy.get('li[role="option"]').should("be.visible").click();
+
+        cy.contains("button", "Filtrar").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('[role="menuitem"]').should("be.visible").first().click();
+        cy.contains("Editar").should("be.visible").click();
+        cy.contains("Vídeos").should("be.visible").click();
+
+        cy.wait(1000);
+
+        cy.get('[data-value="25"]').should("be.visible").click();
+
+        cy.wait("@listarEventos");
+
+        cy.wait(1000);
+
+        cy.get('div[role="rowgroup"]')
+          .not(":first")
+          .children()
+          .then(($rows) => {
+            const finishRowCount = $rows.length;
+
+            expect(finishRowCount).to.greaterThan(10);
+          });
+      }
+    );
+  });
+
   // ------------------ Inativar  ------------------
 
   // ------------------ Listar Eventos  ------------------
 
-  it.skip("deve ser capaz de visualizar os eventos que o usuário cadastrou.", () => {
+  it("deve ser capaz de visualizar os eventos que o usuário cadastrou.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -3736,17 +4109,29 @@ describe("Teste HGTX CRECI - Usuários", () => {
         cy.wait(1000);
 
         cy.contains("Ver Eventos desse Usuário").should("be.visible");
-        cy.get('[data-field="idEvento"]').should("be.exist");
-        cy.get('[data-field="data"]').should("be.exist");
-        cy.get('[data-field="Hora"]').should("be.exist");
-        cy.get('[data-field="cidade"]').should("be.exist");
-        cy.get('[data-field="Ver Detalhes"]').should("be.exist");
-        cy.get('[data-field="actions"]').should("be.exist");
+
+        cy.log("Verificando a ordem das colunas");
+        cy.get(".MuiDialog-root:visible")
+          .find("div[role='columnheader']")
+          .then(($cols) => {
+            const titles = [...$cols].map((c) => c.innerText.trim());
+
+            cy.log("validando ordem das colunas");
+
+            expect(titles).to.deep.equal([
+              "ID",
+              "Data",
+              "Hora",
+              "Estado",
+              "Cidade",
+              "Ver Detalhes",
+            ]);
+          });
       }
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao listar eventos do usuário.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro ao listar eventos do usuário.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -3799,7 +4184,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar os detalhes de um evento ao clicar no ícone na coluna Ver Detalhes.", () => {
+  it("deve ser capaz de visualizar os detalhes de um evento ao clicar no ícone na coluna Ver Detalhes.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -3867,7 +4252,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao tentar visualizar osos detalhes de um evento ao clicar no ícone na coluna Ver Detalhes.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro ao tentar visualizar osos detalhes de um evento ao clicar no ícone na coluna Ver Detalhes.", () => {
     let count = 0;
     cy.viewport(1920, 1080);
 
@@ -3921,7 +4306,8 @@ describe("Teste HGTX CRECI - Usuários", () => {
   });
 
   // esses dois testes abaixo só podem ser liberados após criar um usuário que possua muitos eventos cadastrados
-  // it.skip("deve ser capaz de paginar os Contatos de emergência do grid de contatos.", () => {
+
+  // it("deve ser capaz de paginar os Contatos de emergência do grid de contatos.", () => {
   //   let count = 0;
   //   cy.viewport(1920, 1080);
 
@@ -3975,7 +4361,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
   //   );
   // });
 
-  // it.skip("deve ser capaz de paginar os resultados do grid de Contatos de emergência.", () => {
+  // it("deve ser capaz de paginar os resultados do grid de Contatos de emergência.", () => {
   //   let count = 0;
   //   cy.viewport(1920, 1080);
 
