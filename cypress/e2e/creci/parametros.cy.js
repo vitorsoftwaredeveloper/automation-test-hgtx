@@ -59,7 +59,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     cy.contains("Botão do Pânico Parâmetros").click();
   });
 
-  it.skip("deve ser capaz de visualizar a página de Botão do Pânico - Parâmetros.", () => {
+  it("deve ser capaz de visualizar a página de Botão do Pânico - Parâmetros.", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
       () => {
@@ -77,7 +77,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro quando não consegue carregar as informações da página de Botão do Pânico - Parâmetros.", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro quando não consegue carregar as informações da página de Botão do Pânico - Parâmetros.", () => {
     cy.intercept("GET", "**/obter_tour", { statusCode: 500 });
 
     cy.origin(
@@ -92,7 +92,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de editar as informações da seção Textos do Sistema", () => {
+  it("deve ser capaz de editar as informações da seção Textos do Sistema", () => {
     cy.intercept("POST", "**/editar_tour/**").as("editParameters");
 
     cy.origin(
@@ -166,7 +166,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de ver uma mensagem de erro na tentativa de salvar as alterações ao editar as informações da seção Textos do Sistema", () => {
+  it("deve ser capaz de ver uma mensagem de erro na tentativa de salvar as alterações ao editar as informações da seção Textos do Sistema", () => {
     cy.intercept("POST", "**/editar_tour", { statusCode: 500 }).as(
       "editParameters"
     );
@@ -226,7 +226,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de editar as informações da seção Imagens do Sistema", () => {
+  it("deve ser capaz de editar as informações da seção Imagens do Sistema", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
       () => {
@@ -273,7 +273,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de ver uma mensagem de erro na tentativa de salvar as alterações ao editar as informações da seção Imagens do Sistema", () => {
+  it("deve ser capaz de ver uma mensagem de erro na tentativa de salvar as alterações ao editar as informações da seção Imagens do Sistema", () => {
     cy.intercept("POST", "**/editar_tour", { statusCode: 500 }).as(
       "editParameters"
     );
@@ -322,7 +322,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de editar as informações da seção Vídeos do Sistema", () => {
+  it("deve ser capaz de editar as informações da seção Vídeos do Sistema", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
       () => {
@@ -357,7 +357,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro na tentativa de salvar as alterações ao editar as informações da seção Vídeos do Sistema", () => {
+  it("deve ser capaz de visualizar uma mensagem de erro na tentativa de salvar as alterações ao editar as informações da seção Vídeos do Sistema", () => {
     cy.intercept("POST", "**/editar_tour", { statusCode: 500 }).as(
       "editParameters"
     );
@@ -396,7 +396,7 @@ describe("Teste HGTX CRECI - Usuários", () => {
     );
   });
 
-  it.skip("deve ser capaz de alterar todas as informações e cancelar qualquer alteração", () => {
+  it("deve ser capaz de alterar todas as informações e cancelar qualquer alteração", () => {
     cy.origin(
       "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
       () => {
@@ -491,6 +491,34 @@ describe("Teste HGTX CRECI - Usuários", () => {
         cy.contains("button", "Salvar Alterações")
           .should("be.visible")
           .should("not.be.enabled");
+      }
+    );
+  });
+
+  it("deve ser capaz de visualizar uma mensagem de erro ao informar uma URL inválida na seção Videos do Sistema", () => {
+    cy.origin(
+      "https://creci-app-frontend.hgtx.com.br/creci/botao-panico/cadastros",
+      () => {
+        cy.contains("h2", "Paramêtros Gerais").should("be.visible");
+        cy.wait(1000);
+
+        cy.contains("p", "Videos do Sistema").should("be.visible").click();
+
+        let url;
+        cy.get('input[name="url"]')
+          .invoke("val")
+          .then((val) => (url = val));
+
+        cy.then(() => {
+          cy.get('input[name="url"]').clear().type("alguma coisa");
+        });
+
+        cy.contains("button", "Salvar Alterações")
+          .should("be.visible")
+          .should("be.enabled")
+          .click();
+
+        cy.contains("URL inválida").should("be.visible");
       }
     );
   });
