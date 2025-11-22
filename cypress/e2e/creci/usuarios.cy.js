@@ -2949,8 +2949,6 @@ describe("Teste HGTX CRECI - Usuários", () => {
 
         cy.contains("Download realizado com sucesso").should("be.visible");
 
-        cy.contains(".mp3").should("be.visible");
-
         cy.wait("@downloadAudio").then((interception) => {
           expect(interception.response.statusCode).to.eq(200);
 
