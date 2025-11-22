@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe("Teste HGTX CRECI - Gerenciar Inscrições de Estágio", () => {
+describe("Teste HGTX CRECI - Gerenciar Inscrições de Pessoa Física", () => {
   beforeEach(() => {
     cy.loginCreci();
     cy.intercept("POST", "**/listar_apps_usuario/**", {
@@ -138,10 +138,10 @@ describe("Teste HGTX CRECI - Gerenciar Inscrições de Estágio", () => {
       },
     }).as("getApps");
 
-    cy.contains("Processo Inscricionário").click();
+    cy.contains("Gerenciar Inscrições de Pessoa Física").click();
   });
 
-  it.skip("deve ser capaz de visualizar a página de Gerenciar Inscrições de Estágio.", () => {
+  it.skip("deve ser capaz de visualizar a página de Gerenciar Inscrições de Pessoa Física.", () => {
     cy.origin(
       "https://creci-procinscr.goutron.com.br/auth/requerimentos",
       () => {
@@ -152,7 +152,7 @@ describe("Teste HGTX CRECI - Gerenciar Inscrições de Estágio", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar um grid listando inscrições de estágio.", () => {
+  it.skip("deve ser capaz de visualizar um grid listando inscrições de pessoa física.", () => {
     cy.origin(
       "https://creci-procinscr.goutron.com.br/auth/requerimentos",
       () => {
@@ -179,7 +179,7 @@ describe("Teste HGTX CRECI - Gerenciar Inscrições de Estágio", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro na obtenção dos resultados do grid listando inscrições de estágio.", () => {
+  it.skip("deve ser capaz de visualizar uma mensagem de erro na obtenção dos resultados do grid listando inscrições de pessoa física.", () => {
     cy.origin(
       "https://creci-procinscr.goutron.com.br/auth/requerimentos",
       () => {
