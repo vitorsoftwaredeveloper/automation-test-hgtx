@@ -141,7 +141,7 @@ describe("Teste HGTX CRECI - Processo Inscricionario", () => {
     cy.contains("Processo Inscricionário").click();
   });
 
-  it.skip("deve ser capaz de visualizar a página de Processo Inscricionário.", () => {
+  it.skip("deve ser capaz de visualizar a página de Gerenciar Inscrições de Estágio.", () => {
     cy.origin(
       "https://creci-procinscr.goutron.com.br/auth/requerimentos",
       () => {
@@ -152,7 +152,7 @@ describe("Teste HGTX CRECI - Processo Inscricionario", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar um grid listando requerimentos.", () => {
+  it.skip("deve ser capaz de visualizar um grid listando inscrições de estágio.", () => {
     cy.origin(
       "https://creci-procinscr.goutron.com.br/auth/requerimentos",
       () => {
@@ -179,7 +179,7 @@ describe("Teste HGTX CRECI - Processo Inscricionario", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro na obtenção dos resultados do grid listando requerimentos.", () => {
+  it.skip("deve ser capaz de visualizar uma mensagem de erro na obtenção dos resultados do grid listando inscrições de estágio.", () => {
     cy.origin(
       "https://creci-procinscr.goutron.com.br/auth/requerimentos",
       () => {
@@ -188,7 +188,9 @@ describe("Teste HGTX CRECI - Processo Inscricionario", () => {
     );
   });
 
-  it.skip("deve ser capaz de clicar em um descritivo no canto superior direito abaixo do título Processo Inscricionário e abrir uma aba para a página da HGTX para esclarecimento de dúvidas.", () => {});
+  it.skip("deve ser capaz de visualizar card com informações rápidas sobre inscrições.", () => {});
+
+  it.skip("deve ser capaz de clicar em um descritivo no canto superior direito abaixo do título Gerenciar Inscrições de Estágio e abrir uma aba para a página da HGTX para esclarecimento de dúvidas.", () => {});
 
   // ----------------------------pesquisar-------------------------------
 
@@ -202,17 +204,17 @@ describe("Teste HGTX CRECI - Processo Inscricionario", () => {
 
   it.skip("deve ser capaz abrir a modal de filtro.", () => {});
 
-  it.skip("deve ser capaz abrir a modal de filtro e filtras as informações por Tipo de Solicitação.", () => {
+  it.skip("deve ser capaz abrir a modal de filtro e filtrar as informações por Nome do Requerente.", () => {
     // precisa visualizar aqui somente os possiveis tipos de solicitação
   });
 
-  it.skip("deve ser capaz abrir a modal de filtro e filtrar as informações por N de Pedido.", () => {});
+  it.skip("deve ser capaz abrir a modal de filtro e filtrar as informações por CPF.", () => {});
 
-  it.skip("deve ser capaz abrir a modal de filtro e filtrar as informações por Data de confirmação.", () => {});
+  it.skip("deve ser capaz abrir a modal de filtro e filtrar as informações por Número de inscrição.", () => {});
 
   it.skip("deve ser capaz abrir a modal de filtro e filtrar as informações por Data de solicitação.", () => {});
 
-  it.skip("deve ser capaz abrir a modal de filtro e filtrar as informações por CPF.", () => {});
+  it.skip("deve ser capaz abrir a modal de filtro e filtrar as informações por Analista.", () => {});
 
   it.skip("deve ser capaz abrir a modal de filtro e filtrar as informações por Nome.", () => {});
 
@@ -220,33 +222,21 @@ describe("Teste HGTX CRECI - Processo Inscricionario", () => {
 
   it.skip("deve ser capaz cancelar todos os filtros clicando no botão de Cancelar na modal de Filtros.", () => {});
 
-  it.skip("deve ser capaz de paginar a grid listando requerimentos.", () => {});
+  it.skip("deve ser capaz de paginar a grid.", () => {});
 
   it.skip("deve ser capaz de alterar a visualização de itens por página.", () => {});
 
-  // ---------------------------modal de edição---------------------------
+  // ---------------------------modal de detalhes---------------------------
 
-  it.skip("deve ser capaz abrir a modal de edição do requerimento.", () => {
+  it.skip("deve ser capaz abrir a modal  de detalhes da inscrição(requerimento).", () => {
     // é interessante abrir umas dez modais
   });
 
-  it.skip("deve ser capaz visualizar uma mensagem de erro ao abrir a modal de edição do requerimento, pois o servidor estava indisponível.", () => {});
+  it.skip("deve ser capaz visualizar uma mensagem de erro ao abrir a modal de detalhes da inscrição(requerimento, pois o servidor estava indisponível.", () => {});
 
-  it.skip("deve ser capaz de visualizar e editar os Dados Cadastrais do requerimento.", () => {});
+  // ---------------------------Remover inscrição---------------------------
 
-  it.skip("deve ser capaz de visualizar e editar os Requerimento Eletrônico do requerimento.", () => {});
+  it.skip("deve ser capaz remover uma inscrição.", () => {});
 
-  it.skip("deve ser capaz de visualizar e editar os Registro da Empresa do requerimento.", () => {});
-
-  it.skip("deve ser capaz de visualizar e editar os Sócios do requerimento.", () => {});
-
-  it.skip("deve ser capaz de visualizar e editar Outros Sócios não Corretores do requerimento.", () => {});
-
-  it.skip("deve ser capaz de visualizar e editar Censo 01 do requerimento.", () => {});
-
-  it.skip("deve ser capaz de visualizar e editar Anexos do requerimento.", () => {});
-
-  it.skip("deve ser capaz de cancelar a edição dos dados do requerimento.", () => {});
-
-  it.skip("deve ser capaz de visualizar uma mensagem de erro ao tentar salvar as alterações mas o servidor estava indisponível.", () => {});
+  it.skip("deve ser capaz de visualizar uma mensagem de erro ao remover uma inscrição, pois o servidor estava indisponível.", () => {});
 });
