@@ -192,6 +192,10 @@ describe("Teste HGTX CRECI - Gerenciar Inscrições de Estágio", () => {
 
   it.skip("deve ser capaz de clicar em um descritivo no canto superior direito abaixo do título Gerenciar Inscrições de Estágio e abrir uma aba para a página da HGTX para esclarecimento de dúvidas.", () => {});
 
+  it.skip("deve ser capaz de paginar a grid.", () => {});
+
+  it.skip("deve ser capaz de alterar a visualização de itens por página.", () => {});
+
   // ----------------------------pesquisar-------------------------------
 
   it.skip("deve ser capaz de inserir um dado relacioado a coluna Nome no campo Pesquisar e visualisar um grid listando requerimentos relacinados estritamenteao dado inserido.", () => {});
@@ -221,10 +225,6 @@ describe("Teste HGTX CRECI - Gerenciar Inscrições de Estágio", () => {
   it.skip("deve ser capaz limpar todos os filtros clicando no botão de Limpar Filtros na modal de Filtros.", () => {});
 
   it.skip("deve ser capaz cancelar todos os filtros clicando no botão de Cancelar na modal de Filtros.", () => {});
-
-  it.skip("deve ser capaz de paginar a grid.", () => {});
-
-  it.skip("deve ser capaz de alterar a visualização de itens por página.", () => {});
 
   // ---------------------------modal de detalhes---------------------------
 
