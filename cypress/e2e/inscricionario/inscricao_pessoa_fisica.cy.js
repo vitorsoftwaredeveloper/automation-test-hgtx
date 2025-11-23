@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe("Teste HGTX CRECI - Inscriçáo Estagiário", () => {
+describe("Teste HGTX CRECI - Inscriçáo Pessoa Física", () => {
   beforeEach(() => {
     cy.loginCreci();
     cy.intercept("POST", "**/listar_apps_usuario/**", {
@@ -138,20 +138,20 @@ describe("Teste HGTX CRECI - Inscriçáo Estagiário", () => {
       },
     }).as("getApps");
 
-    cy.contains("Inscriçáo - Estagiário").click();
+    cy.contains("Inscriçáo - Pessoa Física").click();
   });
 
-  it.skip("deve ser capaz de visualizar a página de Inscrição - Estagiário.", () => {
+  it.skip("deve ser capaz de visualizar a página de Inscrição - Pessoa Física.", () => {
     cy.origin(
       "https://creci-procinscr.goutron.com.br/auth/requerimentos",
       () => {
-        cy.contains("h2", "Inscrição - Estagiário").should("be.visible");
+        cy.contains("h2", "Inscrição - Pessoa Física").should("be.visible");
         cy.get("input[name='search']").should("be.visible");
       }
     );
   });
 
-  it.skip("deve ser capaz de visualizar um grid listando inscrições de Estagiário.", () => {
+  it.skip("deve ser capaz de visualizar um grid listando inscrições de Pessoa Física.", () => {
     cy.origin(
       "https://creci-procinscr.goutron.com.br/auth/requerimentos",
       () => {
@@ -178,7 +178,7 @@ describe("Teste HGTX CRECI - Inscriçáo Estagiário", () => {
     );
   });
 
-  it.skip("deve ser capaz de visualizar uma mensagem de erro na obtenção dos resultados do grid listando inscrições de Estagiário.", () => {
+  it.skip("deve ser capaz de visualizar uma mensagem de erro na obtenção dos resultados do grid listando inscrições de Pessoa Física.", () => {
     cy.origin(
       "https://creci-procinscr.goutron.com.br/auth/requerimentos",
       () => {
@@ -206,10 +206,6 @@ describe("Teste HGTX CRECI - Inscriçáo Estagiário", () => {
   // ----------------------------modal de filtro-------------------------------\
 
   it.skip("deve ser capaz abrir a modal de filtro.", () => {});
-
-  it.skip("deve ser capaz abrir a modal de filtro e filtrar as informações por Tipo de solicitação.", () => {
-    // precisa visualizar aqui somente os possiveis tipos de solicitação
-  });
 
   it.skip("deve ser capaz abrir a modal de filtro e filtrar as informações por Número de inscrição.", () => {});
 
